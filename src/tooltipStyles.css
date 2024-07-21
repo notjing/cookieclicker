@@ -1,0 +1,9 @@
+.tooltiptext {
+    position: absolute;
+    background-color: rgb(30, 30, 30);
+    color:white;
+    border: 4px groove burlywood;
+    width: 23rem;
+    z-index: 1000;
+    transform: translateX(-50%);
+  }

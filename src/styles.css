@@ -1,0 +1,215 @@
+* {
+    box-sizing: border-box;
+    font-family: "Merriweather";
+}
+
+img {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+@font-face {
+    font-family: 'Merriweather';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/merriweather/v30/u-440qyriQwlOrhSvowK_l5-cSZMZ-Y.woff2) format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(100%); /* The image width */
+    }
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 2fr 0.75rem 4fr 0.75rem 1.5fr;flex: 1 1 auto;
+    height: 100vh;
+    width: 100%;
+}
+
+.layout .left-col {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    background-image: url("images/background.jpg");
+    color: white;
+    flex: 1;
+    height: 100vh;
+}
+
+.layout .main-cookie {
+    display: flex;
+    justify-content: center;
+    position: relative; 
+}
+
+.layout .main-cookie img:hover {
+    cursor: pointer;
+}
+
+.layout .main-cookie img {
+    position: absolute;
+    width: 15rem;
+    height: 15rem;
+    object-fit: cover; 
+}
+
+.layout .username {
+    display: flex;
+    justify-content: center;
+}
+
+.layout .username button {
+    border-radius: 40%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.9);
+    font-family: "Merriweather";
+    width: 15rem;
+    height: 3rem;
+    margin-top: 4rem;
+}
+
+.layout .cookie-count {
+    margin-top: 1rem;
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: 500;
+}
+
+.layout .left-col .milk {
+    display: flex;
+    flex-direction: row; /* Align images in a row */
+    width: 100%;
+    height: 100%; /* Ensure it takes up available height */
+    flex:1;
+    overflow: hidden; /* Hide overflow if needed */
+}
+
+.layout .left-col .milk img {
+    flex: 1; /* Grow images equally */
+    width: 100%; /* Full width of container */
+    height: 100%; /* Full height of container */
+    object-fit: cover; /* Maintain aspect ratio and cover the container */
+    animation: slide 5s linear infinite;
+    translate: 0% 20%;
+    opacity: 85%;
+}
+
+.layout .left-col .milk .secondImage {
+    translate: -200% 20%;
+}
+
+.layout .cookie-rate {
+    margin-bottom: 1.5rem;
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+}
+
+.layout .divider-one {
+    grid-column: 2 / 2;
+}
+
+.layout .divider-two {
+    grid-column: 4 / 4;
+}
+
+.layout .divider-one img,
+.layout .divider-two img {
+    width: 0.75rem;
+    height: 100vh;
+    position: relative;
+}
+
+.layout .right-col {
+    display: flex;
+    flex-direction: column;
+    grid-column: 5 / -1;
+    padding: 0;
+    z-index: 1;
+    position: relative;
+    height: 100vh;
+}
+
+.layout .right-col h1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.layout .right-col .shop-options {
+    display: flex;
+    background-color: rgba(0, 0, 0);
+    align-items: center;
+    padding: 0;
+}
+
+.layout .right-col .shop-options button {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    height: 2rem;
+    width: 4rem;
+    color: white;
+    background-color: transparent;
+    border: 0;
+}
+
+.highlight-button {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px white, 0 0 40px white;
+    font-weight: bold;
+}
+
+.layout .right-col .shop-options .primary-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.layout .right-col .shop-options .primary-options button {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.layout .right-col .shop-buildings {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.layout .right-col .shop-buildings button {
+    width: 100%;
+    height: 4rem; 
+}
+
+.layout .right-col .divider-three {
+    margin: 0;
+    padding: 0;
+}
+
+.layout .right-col .divider-three img {
+    width: 100%;
+    display: block;
+}
+
+.layout .right-col .upgrade-menu {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    aspect-ratio: 5;
+    min-height: 0;
+    overflow: visible;
+    position: relative;
+    flex: 1 0 auto;
+}
+
+.rotate-90 {
+    rotate: 90deg;
+}

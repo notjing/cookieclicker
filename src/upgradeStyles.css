@@ -1,0 +1,83 @@
+* {
+    box-sizing: border-box;
+    font-family: "Merriweather";
+}
+
+@font-face {
+    font-family: 'Merriweather';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://fonts.gstatic.com/s/merriweather/v30/u-440qyriQwlOrhSvowK_l5-cSZMZ-Y.woff2) format('woff2');
+    unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+ }
+  
+.tooltip img{
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.bright {
+  filter:brightness(2)
+}
+
+.upgradeTooltip {
+  display: flex;
+  flex-direction: column;
+}
+
+.upgradeTooltip .top {
+  display: grid;
+  grid-template-columns: 0.5fr  2fr 1fr;
+}
+
+.upgradeTooltip .top h4{
+  margin: 0;
+  margin-top: 5%;
+  grid-column: 2/2;
+  text-shadow: 0 0 10px #fff;
+}
+
+.upgradeTooltip .top img{
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1/1;
+  margin: 0;
+  padding: 0;
+}
+
+.upgradeTooltip .price {
+  margin-left: auto;
+  margin-right: 5%;
+  margin-top: 5%;
+  text-align: right;
+}
+
+.upgradeTooltip .top .price img{
+  width: 10%;
+  height: auto;
+  aspect-ratio: 1/1;
+  margin: 0;
+  padding: 0;
+}
+
+.upgradeTooltip .mid .description{
+  margin-top: 0;
+  margin-left: 2%;
+  color: rgb(200,200,200);
+}
+
+.upgradeTooltip .mid .quote{
+  margin-top: 0;
+  margin-right: 2%;
+  color: rgb(150,150,150);
+  text-align: right;
+  font-size: 0.8rem;
+}
