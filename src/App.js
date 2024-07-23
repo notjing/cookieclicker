@@ -4,6 +4,7 @@ import "./styles.css";
 import cookieImage from './images/cookie.png';
 import poleImage from './images/woodenseperator.png';
 import horizontalPoleImage from "./images/woodenseperatorhorizontal.png"
+import menuImage from "./images/menu.png"
 import Building from "./components/Building";
 import Upgrade from "./components/Upgrade";
 
@@ -207,8 +208,12 @@ function App() {
         <div className="username">
           <button onClick={usernamePrompt}>{username}'s bakery</button>
         </div>
-        <div className="cookie-count">{Math.floor(totalCookies)} cookies</div>
-        <div className="cookie-rate">per second: {Math.round(totalCps() * 10) / 10}</div>
+
+        <div>
+          <div className="cookie-count"> <h1> {Math.floor(totalCookies)} cookies</h1> </div>
+          <div className="cookie-rate">per second: {Math.round(totalCps() * 10) / 10}</div>
+        </div>
+       
         <div className="main-cookie">
           <img onClick={cookieClicked} src={cookieImage} alt="cookie" />
         </div>
@@ -216,12 +221,45 @@ function App() {
         <div className="milk">
           <img src={milkImagesList[numAchievements/25]}></img>
           <img className="secondImage" src={milkImagesList[numAchievements/25]}></img>  
+          <img className="thirdImage" src={milkImagesList[numAchievements/25]}></img>  
         </div>
 
       </div>
 
       <div className="divider-one">
         <img src={poleImage} alt="divider" />
+      </div>
+
+      <div className="mid-col">
+        <div className="menu">
+          <div className="left-menu">
+            <img src={menuImage}></img> 
+            <button className="options"> Options </button>
+            <button className="stats"> Stats </button>
+          </div>
+
+          <div className="mid-menu">
+              <h3> This is a test </h3>
+          </div>
+
+          <div className="right-menu">
+            <img className="y-reflect" src={menuImage}></img> 
+            <button className="info"> Info </button>
+            <button className="legacy"> Legacy </button>
+          </div>
+         
+
+          
+        </div>
+
+        <div className="divider-three">
+          <img src={horizontalPoleImage}></img>
+        </div>
+
+        <div className="building-backgrounds">
+
+        </div>
+
       </div>
       
 
