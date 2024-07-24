@@ -19,12 +19,58 @@ img {
     unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
 }
 
-@keyframes slide-horizontal {
+@keyframes fadeIn {
     0% {
-        transform: translateX(0);
+        opacity: 0%;
+    }
+    12% {
+        opacity: 100%;
     }
     100% {
-        transform: translateX(100%); 
+        opacity: 100%;
+    }
+}
+
+@keyframes fadeInSlow {
+    0% {
+        opacity: 0%;
+    }
+    88% {
+        opacity: 0%;
+    }
+    100% {
+        opacity: 100%;
+    }
+}
+
+@keyframes slide-horizontal {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(26%); 
+    }
+}
+
+
+@keyframes slide-vertical {
+    0% {
+        transform: translateY(0);
+    }
+    88%{
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(-100%); 
+    }
+}
+
+@keyframes invis {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
     }
 }
 
@@ -95,24 +141,18 @@ img {
     flex-direction: row; /* Align images in a row */
     width: 100%;
     height: 100%; /* Ensure it takes up available height */
-    flex:1;
-    overflow: hidden; /* Hide overflow if needed */
+    overflow: hidden;
     
 }
 
 .layout .left-col .milk img {
-    flex: 1; /* Grow images equally */
-    width: 100%; /* Full width of container */
-    height: 100%; /* Full height of container */
-    object-fit: cover; /* Maintain aspect ratio and cover the container */
-    animation: slide-horizontal 5s linear infinite;
+    animation: slide-horizontal 3s linear infinite; 
     opacity: 85%;
-    translate: -100% 0%;
+    translate: -35.419% 0%;
     filter: saturate(1.5);
     filter: brightness(1.1);
-}
 
-.layout .cookie-rate {
+}    .layout .cookie-rate {
     margin-bottom: 1.5rem;
     display: flex;
     background-color: rgba(0, 0, 0, 0.4);
@@ -157,9 +197,18 @@ img {
 }
 
 .layout .mid-col .menu .mid-menu{
-    display:flex;
-    justify-self: center;
+    text-align: center;
     color:white;
+}
+
+.layout .mid-col .menu .mid-menu .active-text{
+    margin-bottom:0;
+    animation: fadeIn 10s linear 1 reverse, slide-vertical 10s linear 1 forwards; 
+}
+
+.layout .mid-col .menu .mid-menu .incoming-text{
+    margin-top: 0;
+    animation: fadeInSlow 10s linear infinite forwards, slide-vertical 10s linear infinite forwards; 
 }
 
 .layout .mid-col .menu .right-menu .info{
@@ -195,6 +244,7 @@ img {
     z-index: 1;
     position: relative;
     height: 100vh;
+ 
 }
 
 .layout .right-col h1 {
@@ -239,6 +289,7 @@ img {
 .layout .right-col .shop-buildings {
     height: 100%;
     overflow-y: scroll;
+    background-image: linear-gradient(rgb(0, 0, 0, 0.6) 0%, rgb(0,0,0,0.3) 30%,  rgb(0,0,30, 0.4) 70%, rgb(0, 0, 0, 0.8) 100%),  url("images/background.jpg");
 }
 
 .layout .right-col .shop-buildings button {

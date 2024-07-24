@@ -1,6 +1,6 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer, useEffect, useRef } from "react";
 import './App.css';
-import "./styles.css";
+import "./styles.css?v=1.0";
 import cookieImage from './images/cookie.png';
 import poleImage from './images/woodenseperator.png';
 import horizontalPoleImage from "./images/woodenseperatorhorizontal.png"
@@ -13,7 +13,7 @@ export const BUILDINGS = {
   GRANDMA: "Grandma"
 };
 
-const BUILDINGS_INDEX ={
+const BUILDINGS_INDEX = {
   CURSOR: 0
 }
 
@@ -73,7 +73,7 @@ function buildingReducer(state, { building, operation, bulkSelected, totalCookie
             ),
             prices: state.prices.map((priceObj, index) =>
               index === BUILDINGS_INDEX.CURSOR
-                ? { ...priceObj, price: Math.ceil(BASE_PRICE[BUILDINGS.CURSOR] * 1.15 ** (Math.max(state.amts[BUILDINGS_INDEX.CURSOR].amt - bulkSelected, 0)))}
+                ? { ...priceObj, price: Math.ceil(BASE_PRICE[BUILDINGS.CURSOR] * 1.15 ** (Math.max(state.amts[BUILDINGS_INDEX.CURSOR].amt - bulkSelected, 0))) }
                 : priceObj
             )
           };
@@ -103,7 +103,7 @@ const milkImagesList = milkImages.keys().map(image => milkImages(image));
 
 export const upgrades = [
   {
-    id:0, name:"Reinforced index finger", desc:"The mouse and cursors are twice as efficient", quote:"prod prod", price:100, unlocked:0, bought:0, req:[], img:imageList[0], borderlessImg: borderlessImageList[0], afford:false
+    id: 0, name: "Reinforced index finger", desc: "The mouse and cursors are twice as efficient", quote: "prod prod", price: 100, unlocked: 0, bought: 0, req: [], img: imageList[0], borderlessImg: borderlessImageList[0], afford: false
   }
 ];
 
@@ -116,34 +116,85 @@ function App() {
   const [primarySelected, changePrimarySelected] = useState(SHOP_OPTIONS.BUY);
   const [bulkSelected, changeBulkSelected] = useState(SHOP_OPTIONS.ONE);
   const [numAchievements, changeNumAchievements] = useState(0);
-  const [{ prices, amts }, cursorDispatch] = useReducer(buildingReducer, { 
-    prices: [ 
-      {id: 0, price:BASE_PRICE[BUILDINGS.CURSOR]}
-    
-    ], 
-    
+  const [currentNews, changeCurrentNews] = useState("News message #0");
+  const [incomingNews, changeIncomingNews] = useState("News message #-1");
+  const [newsNum, changeNewsNum] = useState(1);
+  const [updateNews, changeUpdateNews] = useState(false);
+  const [{ prices, amts }, cursorDispatch] = useReducer(buildingReducer, {
+    prices: [
+      { id: 0, price: BASE_PRICE[BUILDINGS.CURSOR] }
+
+    ],
+
     amts: [
-      {id: 0, amt:0}
+      { id: 0, amt: 0 }
     ]
-  
+
   });
+
+  const activeTextRef = useRef(null);
+  const incomingTextRef = useRef(null);
+
+ useEffect(() => {
+  const element = activeTextRef.current;
+  const element2 = incomingTextRef.current;
+  let animationHandled = false;
+
+  if (element) {
+    const handleAnimationStart = () => {
+      changeUpdateNews(!updateNews);
+    };
+
+    const handleAnimationEnd = (event) => {
+      if (!animationHandled && event.animationName === 'fadeIn') {
+        animationHandled = true;
+
+        element.style.animation = "invis 10s infinite"; 
+        element2.style.animation = "invis 10s infinite"; 
+
+        setTimeout(() => {
+          element.style.animation = "fadeIn 10s linear 1 reverse, slide-vertical 10s linear 1 forwards";
+          element2.style.animation = "fadeInSlow 10s linear 1 forwards, slide-vertical 10s linear 1 forwards";
+          animationHandled = false; 
+        }, 0);
+      }
+    };
+
+    // Add event listeners
+    element.addEventListener('animationstart', handleAnimationStart);
+    element.addEventListener('animationend', handleAnimationEnd);
+
+    // Cleanup function to remove event listeners
+    return () => {
+      if (element) {
+        element.removeEventListener('animationstart', handleAnimationStart);
+        element.removeEventListener('animationend', handleAnimationEnd);
+      }
+    };
+  }
+}, [updateNews]);
+
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       changeTotalCookies(prevTotalCookies => prevTotalCookies + totalCps() / 60);
       COOKIES_BAKED[BUILDINGS.CURSOR] += BASE_CPS[BUILDINGS.CURSOR] * amts[BUILDINGS_INDEX.CURSOR].amt / 60;
     }, 1000 / 60);
-
     return () => clearInterval(intervalId);
   }, [totalCps()]);
 
-  useEffect(() =>{
-    if(amts[BUILDINGS_INDEX.CURSOR].amt !== "undefined" && amts[BUILDINGS_INDEX.CURSOR].amt >= 1) upgrades[0].unlocked = 1;
+  useEffect(() => {
+    changeCurrentNews(incomingNews);
+    generateNews();
+  }, [updateNews]);
+
+  useEffect(() => {
+    if (amts[BUILDINGS_INDEX.CURSOR].amt !== "undefined" && amts[BUILDINGS_INDEX.CURSOR].amt >= 1) upgrades[0].unlocked = 1;
   }, [amts])
 
-  useEffect(() =>{
-    for(var i = 0; i < upgrades.length; i++){
-      if(upgrades[i].price <= totalCookies) upgrades[i].afford = true;
+  useEffect(() => {
+    for (var i = 0; i < upgrades.length; i++) {
+      if (upgrades[i].price <= totalCookies) upgrades[i].afford = true;
     }
   }, [totalCookies])
 
@@ -179,7 +230,7 @@ function App() {
   }
 
   function implementUpgrades(id) {
-    switch (id){
+    switch (id) {
       case 0:
         upgrades[id].bought = true;
         MULTIPLIER[BUILDINGS.CURSOR] *= 2;
@@ -187,17 +238,23 @@ function App() {
 
   }
 
-  function renderUpgrades (){
+  function renderUpgrades() {
     var ret = [];
-    for(let i = 0; i < upgrades.length; i++){
-      if(upgrades[i].unlocked && !upgrades[i].bought){
+    for (let i = 0; i < upgrades.length; i++) {
+      if (upgrades[i].unlocked && !upgrades[i].bought) {
         ret.push(
-          <Upgrade id={upgrades[i].id} name={upgrades[i].name} desc={upgrades[i].desc} quote={upgrades[i].quote} price={upgrades[i].price}req={upgrades[i].req} img={upgrades[i].img} 
-          borderlessImg={upgrades[i].borderlessImg} afford={upgrades[i].afford} cookies={totalCookies} onClick={implementUpgrades}></Upgrade>
+          <Upgrade id={upgrades[i].id} name={upgrades[i].name} desc={upgrades[i].desc} quote={upgrades[i].quote} price={upgrades[i].price} req={upgrades[i].req} img={upgrades[i].img}
+            borderlessImg={upgrades[i].borderlessImg} afford={upgrades[i].afford} cookies={totalCookies} onClick={implementUpgrades}></Upgrade>
         )
       }
     }
     return ret
+  }
+
+  function generateNews() {
+    console.log((incomingNews.split('#')))
+    changeIncomingNews(prev =>  `News message #${parseInt(prev.split('#')[1]) + 1}`);
+    
   }
 
 
@@ -213,15 +270,14 @@ function App() {
           <div className="cookie-count"> <h1> {Math.floor(totalCookies)} cookies</h1> </div>
           <div className="cookie-rate">per second: {Math.round(totalCps() * 10) / 10}</div>
         </div>
-       
+
         <div className="main-cookie">
           <img onClick={cookieClicked} src={cookieImage} alt="cookie" />
         </div>
 
         <div className="milk">
-          <img src={milkImagesList[numAchievements/25]}></img>
-          <img className="secondImage" src={milkImagesList[numAchievements/25]}></img>  
-          <img className="thirdImage" src={milkImagesList[numAchievements/25]}></img>  
+          <img src={milkImagesList[numAchievements / 25]}></img> 
+         
         </div>
 
       </div>
@@ -233,23 +289,25 @@ function App() {
       <div className="mid-col">
         <div className="menu">
           <div className="left-menu">
-            <img src={menuImage}></img> 
+            <img src={menuImage}></img>
             <button className="options"> Options </button>
             <button className="stats"> Stats </button>
           </div>
 
           <div className="mid-menu">
-              <h3> This is a test </h3>
+            <h3 className="active-text" ref={activeTextRef}> {currentNews} </h3>
+            <h3 className="incoming-text" ref={incomingTextRef}> {incomingNews} </h3>
+
           </div>
 
           <div className="right-menu">
-            <img className="y-reflect" src={menuImage}></img> 
+            <img className="y-reflect" src={menuImage}></img>
             <button className="info"> Info </button>
             <button className="legacy"> Legacy </button>
           </div>
-         
 
-          
+
+
         </div>
 
         <div className="divider-three">
@@ -261,7 +319,7 @@ function App() {
         </div>
 
       </div>
-      
+
 
       <div className="divider-two">
         <img src={poleImage} alt="divider" />
@@ -276,7 +334,7 @@ function App() {
         </div>
 
         <div className="upgrade-menu">
-          {renderUpgrades()} 
+          {renderUpgrades()}
         </div>
 
 
@@ -308,10 +366,11 @@ function App() {
             calculateSellPrice={calculateSellPrice}
             quote="Autoclicks once every 10 seconds"
             img={buildingImagesList[BUILDINGS_INDEX.CURSOR]}
-            tooltipImg = {buildingTooltipImagesList[BUILDINGS_INDEX.CURSOR]}
-            cps = {totalCps()}
+            tooltipImg={buildingTooltipImagesList[BUILDINGS_INDEX.CURSOR]}
+            cps={totalCps()}
+            cookies={totalCookies}
           />
-           
+
         </div>
       </div>
     </div>
