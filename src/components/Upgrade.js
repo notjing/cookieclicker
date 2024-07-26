@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Tooltip from './Tooltip';
 import "../upgradeStyles.css"
 import cookieImage from '../images/cookie.png';
+import frame from "../images/upgradeFrame.png"
 
 class Upgrade extends Component {
 
@@ -35,12 +36,13 @@ class Upgrade extends Component {
   render() {
     const { id, name, desc, price, unlocked, bought, req, img, quote, borderlessImg, cookies } = this.props;
     const { hovered } = this.state;
-
     return (
       <div>
         <div className="tooltip">
           <div className= {"mainImage " + (cookies >= price ? "bright" : "")} >
+            <img  onMouseEnter={this.handleMouseOver} onMouseOut={this.handleMouseOut} onMouseMove={this.handleMouseMove} className="frame" src={frame}></img>
             <img 
+              className="upgrade-image"
               id = {id}
               onMouseMove={this.handleMouseMove}
               ref = {this.state.imageRef}
@@ -53,10 +55,10 @@ class Upgrade extends Component {
           </div>
 
           {hovered && (
-            <Tooltip x={this.state.imageRef.current.getBoundingClientRect().x} y={this.state.y} width={this.state.imageRef.current.getBoundingClientRect().width}>
+            <Tooltip x={this.props.left} y={this.state.y} width={this.state.imageRef.current.getBoundingClientRect().width}>
               <div className="upgradeTooltip">
                 <div className="top">
-                  <img src={borderlessImg}></img>
+                  <img src={img}></img>
                   <h4>{name}</h4>
                   <p className="price"> 
                     <img src={cookieImage}></img>

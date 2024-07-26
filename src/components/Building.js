@@ -52,11 +52,11 @@ class Building extends Component {
 
   render() {
     
-    const { name, price, amt, dispatch, operation, quote, img, tooltipImg, cps } = this.props;
+    const { name, price, amt, dispatch, operation, quote, img, tooltipImg, cps, cookies, shopOption } = this.props;
     const buildingName = name[0].toUpperCase()+name.toLowerCase().substring(1);
     const buildingCps = BASE_CPS[buildingName] * amt * MULTIPLIER[buildingName];
     return (
-      <div className="building">
+      <div className={"building "  + ( (cookies < price || shopOption==SHOP_OPTIONS.SELL && amt == 0) ? "dim" : "")}>
           <button
             ref = {this.state.buttonRef}
             onMouseEnter={this.handleMouseEnter}
@@ -79,7 +79,7 @@ class Building extends Component {
                 <div className="name bold-white">{name} </div>
                 <br />
                 <img className="cookie-symbol" src={cookieImage}></img>
-                {price}
+                <span className={ (cookies < price || (shopOption == SHOP_OPTIONS.SELL && amt == 0)) ? "red" : "green"}> {price} </span>
               </div>
               <div className="col-right">{amt}</div>
             </div>

@@ -8,6 +8,20 @@
   font-weight: 900;
 }
 
+.dim {
+  filter: brightness(60%);
+}
+
+.red{
+  color:rgb(255,91,97);
+  font-weight: 600;
+}
+
+.green{
+  color:rgb(100,231,100);
+  font-weight: 600;
+}
+
 .building {
   width: 100%;
   overflow-x: hidden;

@@ -15,13 +15,36 @@
 .tooltip {
   position: relative;
   display: inline-block;
-  overflow: visible;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+  margin-bottom: -7%;
+  aspect-ratio: 1 / 1;
  }
   
 .tooltip img{
   width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
+  object-fit: cover;
+  filter: brightness(50%);
+}
+
+
+.tooltip .mainImage frame img{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.tooltip .mainImage .upgrade-image{
+  position: absolute;
+  right: 12%;
+  bottom: 12%;
+  width: 80%;
+  height: 80%;
 }
 
 .bright {

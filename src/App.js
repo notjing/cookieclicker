@@ -5,6 +5,7 @@ import cookieImage from './images/cookie.png';
 import poleImage from './images/woodenseperator.png';
 import horizontalPoleImage from "./images/woodenseperatorhorizontal.png"
 import menuImage from "./images/menu.png"
+import icons from "./images/icons.png"
 import Building from "./components/Building";
 import Upgrade from "./components/Upgrade";
 
@@ -85,12 +86,28 @@ function buildingReducer(state, { building, operation, bulkSelected, totalCookie
   }
 }
 
+function findImage(image, row, col) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = image;
+    img.onload = () => {
+      const above = row - 1, left = col - 1;
+      const startX = left * 48;
+      const startY = above * 48;
+      const squareSize = 48;
 
-const images = require.context('./images/upgrades', false);
-const imageList = images.keys().map(image => images(image));
+      const croppedCanvas = document.createElement('canvas');
+      const croppedCtx = croppedCanvas.getContext('2d');
+      croppedCanvas.width = squareSize;
+      croppedCanvas.height = squareSize;
+      croppedCtx.drawImage(img, startX, startY, squareSize, squareSize, 0, 0, squareSize, squareSize);
 
-const borderlessImages = require.context('./images/upgrades_borderless', false);
-const borderlessImageList = borderlessImages.keys().map(image => borderlessImages(image));
+      resolve(croppedCanvas.toDataURL());
+    };
+    img.onerror = reject; // Handle image load errors
+  });
+
+}
 
 const buildingImages = require.context('./images/buildings', false);
 const buildingImagesList = buildingImages.keys().map(image => buildingImages(image));
@@ -103,8 +120,9 @@ const milkImagesList = milkImages.keys().map(image => milkImages(image));
 
 export const upgrades = [
   {
-    id: 0, name: "Reinforced index finger", desc: "The mouse and cursors are twice as efficient", quote: "prod prod", price: 100, unlocked: 0, bought: 0, req: [], img: imageList[0], borderlessImg: borderlessImageList[0], afford: false
-  }
+    id: 0, name: "Reinforced index finger", desc: "The mouse and cursors are twice as efficient", quote: "prod prod", price: 100, unlocked: 1, bought: 0, req: [], img:await findImage(icons, 1, 1) , afford: false
+  },
+  
 ];
 
 
@@ -118,8 +136,8 @@ function App() {
   const [numAchievements, changeNumAchievements] = useState(0);
   const [currentNews, changeCurrentNews] = useState("News message #0");
   const [incomingNews, changeIncomingNews] = useState("News message #-1");
-  const [newsNum, changeNewsNum] = useState(1);
   const [updateNews, changeUpdateNews] = useState(false);
+  const [renderAllUpgrades, changeRenderAllUpgrades] = useState(false);
   const [{ prices, amts }, cursorDispatch] = useReducer(buildingReducer, {
     prices: [
       { id: 0, price: BASE_PRICE[BUILDINGS.CURSOR] }
@@ -134,45 +152,46 @@ function App() {
 
   const activeTextRef = useRef(null);
   const incomingTextRef = useRef(null);
+  const rightColRef = useRef(null);
+    
+   useEffect(() => {
+    const element = activeTextRef.current;
+    const element2 = incomingTextRef.current;
+    let animationHandled = false;
 
- useEffect(() => {
-  const element = activeTextRef.current;
-  const element2 = incomingTextRef.current;
-  let animationHandled = false;
+    if (element) {
+      const handleAnimationStart = () => {
+        changeUpdateNews(!updateNews);
+      };
 
-  if (element) {
-    const handleAnimationStart = () => {
-      changeUpdateNews(!updateNews);
-    };
+      const handleAnimationEnd = (event) => {
+        if (!animationHandled && event.animationName === 'fadeIn') {
+          animationHandled = true;
 
-    const handleAnimationEnd = (event) => {
-      if (!animationHandled && event.animationName === 'fadeIn') {
-        animationHandled = true;
+          element.style.animation = "invis 10s infinite";
+          element2.style.animation = "invis 10s infinite";
 
-        element.style.animation = "invis 10s infinite"; 
-        element2.style.animation = "invis 10s infinite"; 
+          setTimeout(() => {
+            element.style.animation = "fadeIn 10s linear 1 reverse, slide-vertical 10s linear 1 forwards";
+            element2.style.animation = "fadeInSlow 10s linear 1 forwards, slide-vertical 10s linear 1 forwards";
+            animationHandled = false;
+          }, 0);
+        }
+      };
 
-        setTimeout(() => {
-          element.style.animation = "fadeIn 10s linear 1 reverse, slide-vertical 10s linear 1 forwards";
-          element2.style.animation = "fadeInSlow 10s linear 1 forwards, slide-vertical 10s linear 1 forwards";
-          animationHandled = false; 
-        }, 0);
-      }
-    };
+      // Add event listeners
+      element.addEventListener('animationstart', handleAnimationStart);
+      element.addEventListener('animationend', handleAnimationEnd);
 
-    // Add event listeners
-    element.addEventListener('animationstart', handleAnimationStart);
-    element.addEventListener('animationend', handleAnimationEnd);
-
-    // Cleanup function to remove event listeners
-    return () => {
-      if (element) {
-        element.removeEventListener('animationstart', handleAnimationStart);
-        element.removeEventListener('animationend', handleAnimationEnd);
-      }
-    };
-  }
-}, [updateNews]);
+      // Cleanup function to remove event listeners
+      return () => {
+        if (element) {
+          element.removeEventListener('animationstart', handleAnimationStart);
+          element.removeEventListener('animationend', handleAnimationEnd);
+        }
+      };
+    }
+  }, [updateNews]);
 
 
   useEffect(() => {
@@ -211,6 +230,14 @@ function App() {
     changeTotalCookies(totalCookies + perClick);
   }
 
+  function handleUpgradeEnter(){
+    changeRenderAllUpgrades(true);
+  }
+
+  function handleUpgradeLeave(){
+    changeRenderAllUpgrades(false);
+  }
+
   function handlePrimaryOptionChange(option) {
     changePrimarySelected(option);
   }
@@ -240,21 +267,25 @@ function App() {
 
   function renderUpgrades() {
     var ret = [];
+    let show = renderAllUpgrades? upgrades.length:5;
+    let shown = 0;
     for (let i = 0; i < upgrades.length; i++) {
       if (upgrades[i].unlocked && !upgrades[i].bought) {
         ret.push(
           <Upgrade id={upgrades[i].id} name={upgrades[i].name} desc={upgrades[i].desc} quote={upgrades[i].quote} price={upgrades[i].price} req={upgrades[i].req} img={upgrades[i].img}
-            borderlessImg={upgrades[i].borderlessImg} afford={upgrades[i].afford} cookies={totalCookies} onClick={implementUpgrades}></Upgrade>
+            borderlessImg={upgrades[i].borderlessImg} afford={upgrades[i].afford} cookies={totalCookies} onClick={implementUpgrades} 
+            left={rightColRef.current ? rightColRef.current.getBoundingClientRect().left : null}></Upgrade>
         )
+        shown++;
       }
+      if(shown >= show) break;
     }
     return ret
   }
 
   function generateNews() {
-    console.log((incomingNews.split('#')))
-    changeIncomingNews(prev =>  `News message #${parseInt(prev.split('#')[1]) + 1}`);
-    
+    changeIncomingNews(prev => `News message #${parseInt(prev.split('#')[1]) + 1}`);
+
   }
 
 
@@ -276,8 +307,8 @@ function App() {
         </div>
 
         <div className="milk">
-          <img src={milkImagesList[numAchievements / 25]}></img> 
-         
+          <img src={milkImagesList[numAchievements / 25]}></img>
+
         </div>
 
       </div>
@@ -325,15 +356,15 @@ function App() {
         <img src={poleImage} alt="divider" />
       </div>
 
-      <div className="right-col">
+      <div ref={rightColRef} className="right-col">
 
-        <h1>Store</h1>
+        <h1 className="white">Store</h1>
 
         <div className="divider-three">
           <img src={horizontalPoleImage} alt="divider" />
         </div>
 
-        <div className="upgrade-menu">
+        <div onMouseEnter={() => {handleUpgradeEnter()}} onMouseLeave={() => {handleUpgradeLeave()}} className="upgrade-menu">
           {renderUpgrades()}
         </div>
 
@@ -369,9 +400,11 @@ function App() {
             tooltipImg={buildingTooltipImagesList[BUILDINGS_INDEX.CURSOR]}
             cps={totalCps()}
             cookies={totalCookies}
+            shopOption={primarySelected}
           />
 
         </div>
+
       </div>
     </div>
   );

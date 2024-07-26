@@ -74,6 +74,10 @@ img {
     }
 }
 
+.white{
+    color: white;
+}
+
 .layout {
     display: grid;
     grid-template-columns: 2fr 0.75rem 4fr 0.75rem 1.5fr;flex: 1 1 auto;
@@ -244,7 +248,7 @@ img {
     z-index: 1;
     position: relative;
     height: 100vh;
- 
+    background-image: linear-gradient(rgb(0, 0, 0, 0.6) 0%,rgb(0,0,0,0.6) 20%, rgb(0,0,0,0.4) 30%,  rgb(0,0,30, 0.4) 70%, rgb(0, 0, 0, 0.8) 100%),  url("images/background.jpg");
 }
 
 .layout .right-col h1 {
@@ -289,7 +293,7 @@ img {
 .layout .right-col .shop-buildings {
     height: 100%;
     overflow-y: scroll;
-    background-image: linear-gradient(rgb(0, 0, 0, 0.6) 0%, rgb(0,0,0,0.3) 30%,  rgb(0,0,30, 0.4) 70%, rgb(0, 0, 0, 0.8) 100%),  url("images/background.jpg");
+
 }
 
 .layout .right-col .shop-buildings button {
@@ -311,7 +315,8 @@ img {
 .layout .right-col .upgrade-menu {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    aspect-ratio: 5;
+    height: auto;
+    grid-gap: 0;
     min-height: 0;
     overflow: visible;
     position: relative;
