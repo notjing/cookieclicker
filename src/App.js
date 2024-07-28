@@ -11,28 +11,143 @@ import Upgrade from "./components/Upgrade";
 
 export const BUILDINGS = {
   CURSOR: "Cursor",
-  GRANDMA: "Grandma"
+  GRANDMA: "Grandma",
+  FARM: "Farm",
+  MINE: "Mine",
+  FACTORY: "Factory",
+  BANK: "Bank",
+  TEMPLE: "Temple",
+  WIZARD: "Wizard",
+  SHIPMENT: "Shipment",
+  ALCHEMY: "Alchemy",
+  PORTAL: "Portal",
+  TIME: "Time",
+  ANTIMATER: "Antimater",
+  PRISM: "Prism",
+  CHANCE: "Chance",
+  FRACTAL: "Fractal",
+  JAVASCRIPT: "Javascript",
+  IDLE: "Idle",
+  CORTEX: "Cortex",
+  YOU: "You"
 };
 
 const BUILDINGS_INDEX = {
-  CURSOR: 0
+  [BUILDINGS.CURSOR]: 0,
+  [BUILDINGS.GRANDMA]: 1,
+  [BUILDINGS.FARM]: 2,
+  [BUILDINGS.MINE]: 3,
+  [BUILDINGS.FACTORY]: 4,
+  [BUILDINGS.BANK]: 5,
+  [BUILDINGS.TEMPLE]: 6,
+  [BUILDINGS.WIZARD]: 7,
+  [BUILDINGS.SHIPMENT]: 8,
+  [BUILDINGS.ALCHEMY]: 9,
+  [BUILDINGS.PORTAL]: 10,
+  [BUILDINGS.TIME]: 11,
+  [BUILDINGS.ANTIMATER]: 12,
+  [BUILDINGS.PRISM]: 13,
+  [BUILDINGS.CHANCE]: 14,
+  [BUILDINGS.FRACTAL]: 15,
+  [BUILDINGS.JAVASCRIPT]: 16,
+  [BUILDINGS.IDLE]: 17,
+  [BUILDINGS.CORTEX]: 18,
+  [BUILDINGS.YOU]: 19
 }
 
 export const BASE_PRICE = {
-  [BUILDINGS.CURSOR]: 15
+  [BUILDINGS.CURSOR]: 1.5e1,
+  [BUILDINGS.GRANDMA]: 1e2,
+  [BUILDINGS.FARM]: 1.1e3,
+  [BUILDINGS.MINE]: 1.2e4,
+  [BUILDINGS.FACTORY]: 1.3e5,
+  [BUILDINGS.BANK]: 1.4e6,
+  [BUILDINGS.TEMPLE]: 2e7,
+  [BUILDINGS.WIZARD]: 3.3e8,
+  [BUILDINGS.SHIPMENT]: 5.1e9,
+  [BUILDINGS.ALCHEMY]: 7.5e10,
+  [BUILDINGS.PORTAL]: 1e12,
+  [BUILDINGS.TIME]: 1.4e13,
+  [BUILDINGS.ANTIMATER]: 1.7e14,
+  [BUILDINGS.PRISM]: 2.1e15,
+  [BUILDINGS.CHANCE]: 2.6e16,
+  [BUILDINGS.FRACTAL]: 3.1e17,
+  [BUILDINGS.JAVASCRIPT]: 7.1e19,
+  [BUILDINGS.IDLE]: 1.2e21,
+  [BUILDINGS.CORTEX]: 1.9e23,
+  [BUILDINGS.YOU]: 5.4e25
 };
 
 export const BASE_CPS = {
-  [BUILDINGS.CURSOR]: 0.1
+  [BUILDINGS.CURSOR]: 0.1,
+  [BUILDINGS.GRANDMA]: 1,
+  [BUILDINGS.FARM]: 8,
+  [BUILDINGS.MINE]: 4.7e1,
+  [BUILDINGS.FACTORY]: 2.62,
+  [BUILDINGS.BANK]: 1.4e3,
+  [BUILDINGS.TEMPLE]: 7.8e3,
+  [BUILDINGS.WIZARD]: 4.4e4,
+  [BUILDINGS.SHIPMENT]: 2.6e5,
+  [BUILDINGS.ALCHEMY]: 1.6e6,
+  [BUILDINGS.PORTAL]: 1e7,
+  [BUILDINGS.TIME]: 6.5e7,
+  [BUILDINGS.ANTIMATER]: 4.3e8,
+  [BUILDINGS.PRISM]: 2.9e9,
+  [BUILDINGS.CHANCE]: 2.1e10,
+  [BUILDINGS.FRACTAL]: 1.5e11,
+  [BUILDINGS.JAVASCRIPT]: 1.1e12,
+  [BUILDINGS.IDLE]: 8.3e12,
+  [BUILDINGS.CORTEX]: 6.4e13,
+  [BUILDINGS.YOU]: 5.1e14
 };
 
 export const COOKIES_BAKED = {
-  [BUILDINGS.CURSOR]: 0
+  [BUILDINGS.CURSOR]: 0,
+  [BUILDINGS.GRANDMA]: 0,
+  [BUILDINGS.FARM]: 0,
+  [BUILDINGS.MINE]: 0,
+  [BUILDINGS.FACTORY]: 0,
+  [BUILDINGS.BANK]: 0,
+  [BUILDINGS.TEMPLE]: 0,
+  [BUILDINGS.WIZARD]: 0,
+  [BUILDINGS.SHIPMENT]: 0,
+  [BUILDINGS.ALCHEMY]: 0,
+  [BUILDINGS.PORTAL]: 0,
+  [BUILDINGS.TIME]: 0,
+  [BUILDINGS.ANTIMATER]: 0,
+  [BUILDINGS.PRISM]: 0,
+  [BUILDINGS.CHANCE]: 0,
+  [BUILDINGS.FRACTAL]: 0,
+  [BUILDINGS.JAVASCRIPT]: 0,
+  [BUILDINGS.IDLE]: 0,
+  [BUILDINGS.CORTEX]: 0,
+  [BUILDINGS.YOU]: 0
 };
 
 export const MULTIPLIER = {
-  [BUILDINGS.CURSOR]: 1
+  [BUILDINGS.CURSOR]: 1,
+  [BUILDINGS.GRANDMA]: 1,
+  [BUILDINGS.FARM]: 1,
+  [BUILDINGS.MINE]: 1,
+  [BUILDINGS.FACTORY]: 1,
+  [BUILDINGS.BANK]: 1,
+  [BUILDINGS.TEMPLE]: 1,
+  [BUILDINGS.WIZARD]: 1,
+  [BUILDINGS.SHIPMENT]: 1,
+  [BUILDINGS.ALCHEMY]: 1,
+  [BUILDINGS.PORTAL]: 1,
+  [BUILDINGS.TIME]: 1,
+  [BUILDINGS.ANTIMATER]: 1,
+  [BUILDINGS.PRISM]: 1,
+  [BUILDINGS.CHANCE]: 1,
+  [BUILDINGS.FRACTAL]: 1,
+  [BUILDINGS.JAVASCRIPT]: 1,
+  [BUILDINGS.IDLE]: 1,
+  [BUILDINGS.CORTEX]: 1,
+  [BUILDINGS.YOU]: 1
 };
+
+
 
 export const SHOP_OPTIONS = {
   BUY: "Buy",
@@ -43,48 +158,45 @@ export const SHOP_OPTIONS = {
 };
 
 function buildingReducer(state, { building, operation, bulkSelected, totalCookies, changeTotalCookies }) {
-  switch (building) {
-    case BUILDINGS.CURSOR:
-      switch (operation) {
-        case SHOP_OPTIONS.BUY:
-          if (totalCookies >= state.prices[BUILDINGS_INDEX.CURSOR].price * (1 - 1.15 ** bulkSelected) / (1 - 1.15)) {
-            changeTotalCookies(totalCookies - state.prices[BUILDINGS_INDEX.CURSOR].price * (1 - 1.15 ** bulkSelected) / (1 - 1.15));
-            return {
-              ...state,
-              amts: state.amts.map((amtObj, index) =>
-                index === BUILDINGS_INDEX.CURSOR
-                  ? { ...amtObj, amt: amtObj.amt + bulkSelected }
-                  : amtObj
-              ),
-              prices: state.prices.map((priceObj, index) =>
-                index === BUILDINGS_INDEX.CURSOR
-                  ? { ...priceObj, price: Math.ceil(BASE_PRICE[BUILDINGS.CURSOR] * 1.15 ** (state.amts[BUILDINGS_INDEX.CURSOR].amt + bulkSelected)) }
-                  : priceObj
-              )
-            };
-          }
-          return state;
-        case SHOP_OPTIONS.SELL:
-          return {
-            ...state,
-            amts: state.amts.map((amtObj, index) =>
-              index === BUILDINGS_INDEX.CURSOR
-                ? { ...amtObj, amt: Math.max(state.amts[BUILDINGS_INDEX.CURSOR].amt - bulkSelected, 0) }
-                : amtObj
-            ),
-            prices: state.prices.map((priceObj, index) =>
-              index === BUILDINGS_INDEX.CURSOR
-                ? { ...priceObj, price: Math.ceil(BASE_PRICE[BUILDINGS.CURSOR] * 1.15 ** (Math.max(state.amts[BUILDINGS_INDEX.CURSOR].amt - bulkSelected, 0))) }
-                : priceObj
-            )
-          };
-        default:
-          return state;
+  console.log(building)
+  switch (operation) {
+    case SHOP_OPTIONS.BUY:
+      if (totalCookies >= state.prices[BUILDINGS_INDEX[building]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15)) {
+        changeTotalCookies(totalCookies - state.prices[BUILDINGS_INDEX[building]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15));
+        return {
+          ...state,
+          amts: state.amts.map((amt, index) =>
+            index === BUILDINGS_INDEX[building]
+              ? amt + bulkSelected 
+              : amt
+          ),
+          prices: state.prices.map((price, index) =>
+            index === BUILDINGS_INDEX[building]
+              ? Math.ceil(BASE_PRICE[building] * 1.15 ** (state.amts[BUILDINGS_INDEX[building]] + bulkSelected)) 
+              : price
+          )
+        };
       }
+      return state;
+    case SHOP_OPTIONS.SELL:
+      return {
+        ...state,
+        amts: state.amts.map((amt, index) =>
+          index === BUILDINGS_INDEX[building]
+            ? Math.max(state.amts[BUILDINGS_INDEX[building]] - bulkSelected, 0)
+            : amt
+        ),
+        prices: state.prices.map((price, index) =>
+          index === BUILDINGS_INDEX[building]
+            ? Math.ceil(BASE_PRICE[building] * 1.15 ** (Math.max(state.amts[BUILDINGS_INDEX[building]] - bulkSelected, 0))) 
+            : price
+        )
+      };
     default:
       return state;
   }
 }
+
 
 function findImage(image, row, col) {
   return new Promise((resolve, reject) => {
@@ -109,6 +221,7 @@ function findImage(image, row, col) {
 
 }
 
+
 const buildingImages = require.context('./images/buildings', false);
 const buildingImagesList = buildingImages.keys().map(image => buildingImages(image));
 
@@ -120,9 +233,12 @@ const milkImagesList = milkImages.keys().map(image => milkImages(image));
 
 export const upgrades = [
   {
-    id: 0, name: "Reinforced index finger", desc: "The mouse and cursors are twice as efficient", quote: "prod prod", price: 100, unlocked: 1, bought: 0, req: [], img:await findImage(icons, 1, 1) , afford: false
+    id: 0, name: "Reinforced index finger", desc: "The mouse and cursors are twice as efficient.", quote: "prod prod", price: 100, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 1]] }, img: await findImage(icons, 1, 1), afford: false
   },
-  
+  {
+    id: 1, name: "Carpal tunnel prevention cream", desc: "The mouse and cursors are twice as efficient.", quote: "it... it hurts to click...", price: 500, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 1]] }, img: await findImage(icons, 2, 1), afford: false
+  },
+
 ];
 
 
@@ -138,14 +254,16 @@ function App() {
   const [incomingNews, changeIncomingNews] = useState("News message #-1");
   const [updateNews, changeUpdateNews] = useState(false);
   const [renderAllUpgrades, changeRenderAllUpgrades] = useState(false);
-  const [{ prices, amts }, cursorDispatch] = useReducer(buildingReducer, {
+  const [tooltipImages, changeTooltipImages] = useState([]);
+  const [{ prices, amts }, buildingDispatch] = useReducer(buildingReducer, {
     prices: [
-      { id: 0, price: BASE_PRICE[BUILDINGS.CURSOR] }
-
+      BASE_PRICE[BUILDINGS.CURSOR],
+      BASE_PRICE[BUILDINGS.GRANDMA]
     ],
 
     amts: [
-      { id: 0, amt: 0 }
+      0 ,
+      0
     ]
 
   });
@@ -153,8 +271,8 @@ function App() {
   const activeTextRef = useRef(null);
   const incomingTextRef = useRef(null);
   const rightColRef = useRef(null);
-    
-   useEffect(() => {
+
+  useEffect(() => {
     const element = activeTextRef.current;
     const element2 = incomingTextRef.current;
     let animationHandled = false;
@@ -197,7 +315,7 @@ function App() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       changeTotalCookies(prevTotalCookies => prevTotalCookies + totalCps() / 60);
-      COOKIES_BAKED[BUILDINGS.CURSOR] += BASE_CPS[BUILDINGS.CURSOR] * amts[BUILDINGS_INDEX.CURSOR].amt / 60;
+      COOKIES_BAKED[BUILDINGS.CURSOR] += BASE_CPS[BUILDINGS.CURSOR] * amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]] / 60;
     }, 1000 / 60);
     return () => clearInterval(intervalId);
   }, [totalCps()]);
@@ -208,8 +326,10 @@ function App() {
   }, [updateNews]);
 
   useEffect(() => {
-    if (amts[BUILDINGS_INDEX.CURSOR].amt !== "undefined" && amts[BUILDINGS_INDEX.CURSOR].amt >= 1) upgrades[0].unlocked = 1;
-  }, [amts])
+    for (let i = 0; i < upgrades.length; i++) {
+      if (!upgrades[i].bought && !upgrades[i].unlocked && checkRequirements(upgrades[i].req)) upgrades[i].unlocked = true
+    }
+  }, [totalCookies, amts])
 
   useEffect(() => {
     for (var i = 0; i < upgrades.length; i++) {
@@ -217,8 +337,15 @@ function App() {
     }
   }, [totalCookies])
 
+  useEffect(() => {
+    async function loadImage() {
+      changeTooltipImages([await findImage(icons, 1, 1), await findImage(icons, 1, 2)])
+    }
+    loadImage();
+  }, []);
+
   function totalCps() {
-    return amts[BUILDINGS_INDEX.CURSOR].amt * MULTIPLIER[BUILDINGS.CURSOR] * BASE_CPS[BUILDINGS.CURSOR];
+    return amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]] * MULTIPLIER[BUILDINGS.CURSOR] * BASE_CPS[BUILDINGS.CURSOR];
   }
 
   function usernamePrompt() {
@@ -230,11 +357,11 @@ function App() {
     changeTotalCookies(totalCookies + perClick);
   }
 
-  function handleUpgradeEnter(){
+  function handleUpgradeEnter() {
     changeRenderAllUpgrades(true);
   }
 
-  function handleUpgradeLeave(){
+  function handleUpgradeLeave() {
     changeRenderAllUpgrades(false);
   }
 
@@ -249,8 +376,8 @@ function App() {
   function calculateSellPrice(building) {
     switch (building) {
       case BUILDINGS.CURSOR:
-        if (amts[BUILDINGS_INDEX.CURSOR].amt < bulkSelected) return BASE_PRICE[BUILDINGS.CURSOR] * (1 - (1.15 ** amts[BUILDINGS_INDEX.CURSOR].amt)) / (1 - 1.15) * 0.25;
-        else return BASE_PRICE[BUILDINGS.CURSOR] * (1.15 ** (amts[BUILDINGS_INDEX.CURSOR].amt - bulkSelected)) * (1 - (1.15 ** bulkSelected)) / (1 - 1.15) * 0.25;
+        if (amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]] < bulkSelected) return BASE_PRICE[BUILDINGS.CURSOR] * (1 - (1.15 ** amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]])) / (1 - 1.15) * 0.25;
+        else return BASE_PRICE[BUILDINGS.CURSOR] * (1.15 ** (amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]] - bulkSelected)) * (1 - (1.15 ** bulkSelected)) / (1 - 1.15) * 0.25;
       default:
         return 0;
     }
@@ -262,32 +389,41 @@ function App() {
         upgrades[id].bought = true;
         MULTIPLIER[BUILDINGS.CURSOR] *= 2;
     }
-
   }
 
   function renderUpgrades() {
     var ret = [];
-    let show = renderAllUpgrades? upgrades.length:5;
+    let show = renderAllUpgrades ? upgrades.length : 5;
     let shown = 0;
     for (let i = 0; i < upgrades.length; i++) {
       if (upgrades[i].unlocked && !upgrades[i].bought) {
         ret.push(
           <Upgrade id={upgrades[i].id} name={upgrades[i].name} desc={upgrades[i].desc} quote={upgrades[i].quote} price={upgrades[i].price} req={upgrades[i].req} img={upgrades[i].img}
-            borderlessImg={upgrades[i].borderlessImg} afford={upgrades[i].afford} cookies={totalCookies} onClick={implementUpgrades} 
+            borderlessImg={upgrades[i].borderlessImg} afford={upgrades[i].afford} cookies={totalCookies} onClick={implementUpgrades}
             left={rightColRef.current ? rightColRef.current.getBoundingClientRect().left : null}></Upgrade>
         )
         shown++;
       }
-      if(shown >= show) break;
+      if (shown >= show) break;
     }
     return ret
   }
 
   function generateNews() {
     changeIncomingNews(prev => `News message #${parseInt(prev.split('#')[1]) + 1}`);
-
   }
 
+  function checkRequirements(req) {
+    if (req["building"]) {
+      for (var [building, amt] of req["building"]) {
+        if (amt > amts[BUILDINGS_INDEX[building]]) return false;
+      }
+    }
+    if (req["cookies"]) {
+      if (totalCookies < req["cookies"]) return false;
+    }
+    return true
+  }
 
 
   return (
@@ -364,7 +500,7 @@ function App() {
           <img src={horizontalPoleImage} alt="divider" />
         </div>
 
-        <div onMouseEnter={() => {handleUpgradeEnter()}} onMouseLeave={() => {handleUpgradeLeave()}} className="upgrade-menu">
+        <div onMouseEnter={() => { handleUpgradeEnter() }} onMouseLeave={() => { handleUpgradeLeave() }} className="upgrade-menu">
           {renderUpgrades()}
         </div>
 
@@ -385,22 +521,19 @@ function App() {
         </div>
 
         <div className="shop-buildings">
+          {console.log(prices)}
           <Building
-            dispatch={cursorDispatch}
-            name={BUILDINGS.CURSOR}
-            price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX.CURSOR].price * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.CURSOR))}
-            amt={amts[BUILDINGS_INDEX.CURSOR].amt}
-            operation={primarySelected}
-            totalCookies={totalCookies}
-            changeCookies={changeTotalCookies}
-            bulkSelected={bulkSelected}
-            calculateSellPrice={calculateSellPrice}
-            quote="Autoclicks once every 10 seconds"
-            img={buildingImagesList[BUILDINGS_INDEX.CURSOR]}
-            tooltipImg={buildingTooltipImagesList[BUILDINGS_INDEX.CURSOR]}
-            cps={totalCps()}
-            cookies={totalCookies}
-            shopOption={primarySelected}
+            dispatch={buildingDispatch} name={BUILDINGS.CURSOR} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.CURSOR]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.CURSOR))}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            calculateSellPrice={calculateSellPrice} quote="Autoclicks once every 10 seconds." img={buildingImagesList[BUILDINGS_INDEX[BUILDINGS.CURSOR]]}
+            tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.CURSOR]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
+          /> 
+
+          <Building
+            dispatch={buildingDispatch} name={BUILDINGS.GRANDMA} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.GRANDMA]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.GRANDMA))}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[BUILDINGS_INDEX[BUILDINGS.GRANDMA]]}
+            tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.GRANDMA]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
         </div>

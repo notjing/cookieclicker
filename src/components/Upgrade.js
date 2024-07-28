@@ -30,7 +30,7 @@ class Upgrade extends Component {
   }
 
   handleClick = () => {
-    this.props.onClick(this.props.id);
+    if(this.props.cookies >= this.props.price) this.props.onClick(this.props.id);
   }
 
   render() {
