@@ -8,6 +8,7 @@ import menuImage from "./images/menu.png"
 import icons from "./images/icons.png"
 import Building from "./components/Building";
 import Upgrade from "./components/Upgrade";
+import NumberAbbreviator from "./components/NumberAbbreviator";
 
 export const BUILDINGS = {
   CURSOR: "Cursor",
@@ -22,7 +23,7 @@ export const BUILDINGS = {
   ALCHEMY: "Alchemy",
   PORTAL: "Portal",
   TIME: "Time",
-  ANTIMATER: "Antimater",
+  ANTIMATTER: "Antimatter",
   PRISM: "Prism",
   CHANCE: "Chance",
   FRACTAL: "Fractal",
@@ -45,7 +46,7 @@ const BUILDINGS_INDEX = {
   [BUILDINGS.ALCHEMY]: 9,
   [BUILDINGS.PORTAL]: 10,
   [BUILDINGS.TIME]: 11,
-  [BUILDINGS.ANTIMATER]: 12,
+  [BUILDINGS.ANTIMATTER]: 12,
   [BUILDINGS.PRISM]: 13,
   [BUILDINGS.CHANCE]: 14,
   [BUILDINGS.FRACTAL]: 15,
@@ -68,7 +69,7 @@ export const BASE_PRICE = {
   [BUILDINGS.ALCHEMY]: 7.5e10,
   [BUILDINGS.PORTAL]: 1e12,
   [BUILDINGS.TIME]: 1.4e13,
-  [BUILDINGS.ANTIMATER]: 1.7e14,
+  [BUILDINGS.ANTIMATTER]: 1.7e14,
   [BUILDINGS.PRISM]: 2.1e15,
   [BUILDINGS.CHANCE]: 2.6e16,
   [BUILDINGS.FRACTAL]: 3.1e17,
@@ -91,7 +92,7 @@ export const BASE_CPS = {
   [BUILDINGS.ALCHEMY]: 1.6e6,
   [BUILDINGS.PORTAL]: 1e7,
   [BUILDINGS.TIME]: 6.5e7,
-  [BUILDINGS.ANTIMATER]: 4.3e8,
+  [BUILDINGS.ANTIMATTER]: 4.3e8,
   [BUILDINGS.PRISM]: 2.9e9,
   [BUILDINGS.CHANCE]: 2.1e10,
   [BUILDINGS.FRACTAL]: 1.5e11,
@@ -114,7 +115,7 @@ export const COOKIES_BAKED = {
   [BUILDINGS.ALCHEMY]: 0,
   [BUILDINGS.PORTAL]: 0,
   [BUILDINGS.TIME]: 0,
-  [BUILDINGS.ANTIMATER]: 0,
+  [BUILDINGS.ANTIMATTER]: 0,
   [BUILDINGS.PRISM]: 0,
   [BUILDINGS.CHANCE]: 0,
   [BUILDINGS.FRACTAL]: 0,
@@ -137,7 +138,7 @@ export const MULTIPLIER = {
   [BUILDINGS.ALCHEMY]: 1,
   [BUILDINGS.PORTAL]: 1,
   [BUILDINGS.TIME]: 1,
-  [BUILDINGS.ANTIMATER]: 1,
+  [BUILDINGS.ANTIMATTER]: 1,
   [BUILDINGS.PRISM]: 1,
   [BUILDINGS.CHANCE]: 1,
   [BUILDINGS.FRACTAL]: 1,
@@ -158,7 +159,6 @@ export const SHOP_OPTIONS = {
 };
 
 function buildingReducer(state, { building, operation, bulkSelected, totalCookies, changeTotalCookies }) {
-  console.log(building)
   switch (operation) {
     case SHOP_OPTIONS.BUY:
       if (totalCookies >= state.prices[BUILDINGS_INDEX[building]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15)) {
@@ -243,15 +243,18 @@ export const upgrades = [
 function App() {
   const [username, changeUsername] = useState("Default Username");
   const [perClick, changePerClick] = useState(1);
-  const [totalCookies, changeTotalCookies] = useState(0);
+  const [totalCookies, changeTotalCookies] = useState(1e18);
   const [primarySelected, changePrimarySelected] = useState(SHOP_OPTIONS.BUY);
   const [bulkSelected, changeBulkSelected] = useState(SHOP_OPTIONS.ONE);
   const [numAchievements, changeNumAchievements] = useState(0);
+  const [numUpgrades, changeNumUpgrades] = useState(0);
+  const [unlockedUpgrades, changeUnlockedUpgrades] = useState(0);
   const [currentNews, changeCurrentNews] = useState("News message #0");
   const [incomingNews, changeIncomingNews] = useState("News message #-1");
   const [updateNews, changeUpdateNews] = useState(false);
   const [renderAllUpgrades, changeRenderAllUpgrades] = useState(false);
   const [tooltipImages, changeTooltipImages] = useState([]);
+  
   const [{ prices, amts }, buildingDispatch] = useReducer(buildingReducer, {
     prices: [
       BASE_PRICE[BUILDINGS.CURSOR],
@@ -266,7 +269,7 @@ function App() {
       BASE_PRICE[BUILDINGS.ALCHEMY],
       BASE_PRICE[BUILDINGS.PORTAL],
       BASE_PRICE[BUILDINGS.TIME],
-      BASE_PRICE[BUILDINGS.ANTIMATER],
+      BASE_PRICE[BUILDINGS.ANTIMATTER],
       BASE_PRICE[BUILDINGS.PRISM],
       BASE_PRICE[BUILDINGS.CHANCE],
       BASE_PRICE[BUILDINGS.FRACTAL],
@@ -298,7 +301,6 @@ function App() {
       0 ,
       0 ,
     ]
-
   });
 
   const activeTextRef = useRef(null);
@@ -344,7 +346,6 @@ function App() {
     }
   }, [updateNews]);
 
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       changeTotalCookies(prevTotalCookies => prevTotalCookies + totalCps() / 60);
@@ -360,7 +361,11 @@ function App() {
 
   useEffect(() => {
     for (let i = 0; i < upgrades.length; i++) {
-      if (!upgrades[i].bought && !upgrades[i].unlocked && checkRequirements(upgrades[i].req)) upgrades[i].unlocked = true
+      if (!upgrades[i].bought && !upgrades[i].unlocked && checkRequirements(upgrades[i].req)){
+        upgrades[i].unlocked = true
+        changeUnlockedUpgrades(unlockedUpgrades + 1)
+        console.log("Upgrade Unlocked")
+      } 
     }
   }, [totalCookies, amts])
 
@@ -381,7 +386,12 @@ function App() {
   }, []);
 
   function totalCps() {
-    return amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]] * MULTIPLIER[BUILDINGS.CURSOR] * BASE_CPS[BUILDINGS.CURSOR];
+    let ret = 0
+    for(const building in BUILDINGS){
+      const name = BUILDINGS[building];
+      ret += amts[BUILDINGS_INDEX[name]] * MULTIPLIER[name] * BASE_CPS[name]
+    }
+    return ret;
   }
 
   function usernamePrompt() {
@@ -410,21 +420,22 @@ function App() {
   }
 
   function calculateSellPrice(building) {
-    switch (building) {
-      case BUILDINGS.CURSOR:
-        if (amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]] < bulkSelected) return BASE_PRICE[BUILDINGS.CURSOR] * (1 - (1.15 ** amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]])) / (1 - 1.15) * 0.25;
-        else return BASE_PRICE[BUILDINGS.CURSOR] * (1.15 ** (amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]] - bulkSelected)) * (1 - (1.15 ** bulkSelected)) / (1 - 1.15) * 0.25;
-      default:
-        return 0;
-    }
+        if (amts[BUILDINGS_INDEX[building]] < bulkSelected) return BASE_PRICE[building] * (1 - (1.15 ** amts[BUILDINGS_INDEX[building]])) / (1 - 1.15) * 0.25;
+        else return BASE_PRICE[building] * (1.15 ** (amts[BUILDINGS_INDEX[building]] - bulkSelected)) * (1 - (1.15 ** bulkSelected)) / (1 - 1.15) * 0.25;
+    
   }
 
   function implementUpgrades(id) {
+    upgrades[id].bought = true;
+    changeNumUpgrades(numUpgrades + 1)
     switch (id) {
       case 0:
-        upgrades[id].bought = true;
-        MULTIPLIER[BUILDINGS.CURSOR] *= 2;
+        MULTIPLIER[BUILDINGS.CURSOR] *= 2; break;
+      case 1:
+        MULTIPLIER[BUILDINGS.CURSOR] *= 2; break;
+      
     }
+    
   }
 
   function renderUpgrades() {
@@ -433,6 +444,7 @@ function App() {
     let shown = 0;
     for (let i = 0; i < upgrades.length; i++) {
       if (upgrades[i].unlocked && !upgrades[i].bought) {
+        console.log(`Upgrade ${upgrades[i].id} rendered`)
         ret.push(
           <Upgrade id={upgrades[i].id} name={upgrades[i].name} desc={upgrades[i].desc} quote={upgrades[i].quote} price={upgrades[i].price} req={upgrades[i].req} img={upgrades[i].img}
             borderlessImg={upgrades[i].borderlessImg} afford={upgrades[i].afford} cookies={totalCookies} onClick={implementUpgrades}
@@ -458,6 +470,7 @@ function App() {
     if (req["cookies"]) {
       if (totalCookies < req["cookies"]) return false;
     }
+    console.log("requirements met")
     return true
   }
 
@@ -470,8 +483,8 @@ function App() {
         </div>
 
         <div>
-          <div className="cookie-count"> <h1> {Math.floor(totalCookies)} cookies</h1> </div>
-          <div className="cookie-rate">per second: {Math.round(totalCps() * 10) / 10}</div>
+          <div className="cookie-count"> <h1> {NumberAbbreviator(totalCookies)} cookies</h1> </div>
+          <div className="cookie-rate">per second: {NumberAbbreviator(Math.round(totalCps() * 10) / 10)}</div>
         </div>
 
         <div className="main-cookie">
@@ -557,52 +570,51 @@ function App() {
         </div>
 
         <div className="shop-buildings">
-          {console.log(prices)}
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.CURSOR} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.CURSOR]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.CURSOR))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="Autoclicks once every 10 seconds." img={buildingImagesList[5]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.CURSOR]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           /> 
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.GRANDMA} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.GRANDMA]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.GRANDMA))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[9]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.GRANDMA]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.FARM} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.FARM]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.FARM))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.FARM]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.FARM]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[7]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.FARM]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.MINE} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.MINE]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.MINE))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.MINE]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.MINE]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[12]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.MINE]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.FACTORY} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.FACTORY]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.FACTORY))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.FACTORY]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.FACTORY]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[6]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.FACTORY]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
            <Building
             dispatch={buildingDispatch} name={BUILDINGS.BANK} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.BANK]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.BANK))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.BANK]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.BANK]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[2]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.BANK]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.TEMPLE} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.TEMPLE]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.TEMPLE))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.TEMPLE]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.TEMPLE]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[16]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.TEMPLE]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
@@ -611,91 +623,91 @@ function App() {
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.WIZARD} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.WIZARD]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.WIZARD))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.WIZARD]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.WIZARD]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[18]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.WIZARD]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.SHIPMENT} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.SHIPMENT]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.SHIPMENT))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.SHIPMENT]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.SHIPMENT]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[15]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.SHIPMENT]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.ALCHEMY} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.ALCHEMY]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.ALCHEMY))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.ALCHEMY]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.ALCHEMY]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[0]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.ALCHEMY]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.PORTAL} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.PORTAL]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.PORTAL))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.PORTAL]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.PORTAL]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[13]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.PORTAL]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.TIME} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.TIME]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.TIME))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.TIME]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.TIME]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[17]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.TIME]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
-            dispatch={buildingDispatch} name={BUILDINGS.ANTIMATER} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.ANTIMATER]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.ANTIMATER))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.ANTIMATER]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            dispatch={buildingDispatch} name={BUILDINGS.ANTIMATTER} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.ANTIMATTER]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.ANTIMATTER))}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.ANTIMATTER]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[1]}
-            tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.ANTIMATER]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
+            tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.ANTIMATTER]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.PRISM} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.PRISM]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.PRISM))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.PRISM]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.PRISM]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[14]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.PRISM]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.CHANCE} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.CHANCE]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.CHANCE))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.CHANCE]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.CHANCE]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[3]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.CHANCE]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.FRACTAL} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.FRACTAL]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.FRACTAL))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.FRACTAL]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.FRACTAL]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[8]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.FRACTAL]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.JAVASCRIPT} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.JAVASCRIPT]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.JAVASCRIPT))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[11]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.JAVASCRIPT]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.IDLE} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.IDLE]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.IDLE))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[10]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.IDLE]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.CORTEX} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.CORTEX]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.CORTEX))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.CORTEX]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.CORTEX]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[4]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.CORTEX]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.YOU} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.YOU]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.YOU))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.YOU]].amt} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.YOU]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="A nice grandma to bake more cookies." img={buildingImagesList[19]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.YOU]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
