@@ -6,6 +6,7 @@ import '../styles.css';
 import { SHOP_OPTIONS, BASE_CPS, COOKIES_BAKED, MULTIPLIER, BUILDINGS } from '../App.js';
 import Tooltip from './Tooltip.js';
 import cookieImage from '../images/cookie.png';
+import NumberAbbreviator from './NumberAbbreviator.js';
 
 class Building extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class Building extends Component {
   }
 
   handleMouseMove(e){
-    this.setState({x: e.screenX, y: e.screenY});
+    this.setState({x: e.clientX, y: e.clientY});
   }
 
   handleChangeCookies() {
@@ -79,7 +80,7 @@ class Building extends Component {
                 <div className="name bold-white">{name} </div>
                 <br />
                 <img className="cookie-symbol" src={cookieImage}></img>
-                <span className={ (cookies < price || (shopOption == SHOP_OPTIONS.SELL && amt == 0)) ? "red" : "green"}> {price} </span>
+                <span className={ (cookies < price || (shopOption == SHOP_OPTIONS.SELL && amt == 0)) ? "red" : "green"}> {NumberAbbreviator(price)} </span>
               </div>
               <div className="col-right">{amt}</div>
             </div>
@@ -87,14 +88,14 @@ class Building extends Component {
           </button>
 
           {this.state.hovered &&
-            <Tooltip x={this.state.buttonRef.current.getBoundingClientRect().x} y={this.state.y} width={this.state.buttonRef.current.getBoundingClientRect().width}>
+            <Tooltip x={this.state.buttonRef.current.getBoundingClientRect().x} y={Math.min(this.state.y + 100, window.innerHeight + 25)} width={this.state.buttonRef.current.getBoundingClientRect().width}>
                <div className="buildingTooltip">
                 <div className="top">
                   <img src={tooltipImg}></img>
                   <h4>{name}</h4>
                   <p className="price"> 
                     <img src={cookieImage}></img>
-                     {price}
+                     {NumberAbbreviator(price)}
                   </p>
                 </div>
                 
@@ -107,7 +108,7 @@ class Building extends Component {
                   <div className="bot">
                     <ul>
                       <li> each {name.toLowerCase()} produces <div className="bold-white"> {BASE_CPS[buildingName] * MULTIPLIER[buildingName]} cookies </div> per second </li>
-                      <li> {amt} {name.toLowerCase()} producing <div className="bold-white">{buildingCps} cookies </div> per second (<div className="bold-white">{buildingCps*100/cps}%</div> of cps)</li>
+                      <li> {amt} {name.toLowerCase()} producing <div className="bold-white">{buildingCps} cookies </div> per second (<div className="bold-white">{Math.round(buildingCps*100*10/cps)/10}%</div> of cps)</li>
                       <li> <div className="bold-white">{Math.round(COOKIES_BAKED[buildingName])}</div> cookies baked so far </li>
                     </ul>
                   </div> 

@@ -65,6 +65,15 @@ img {
     }
 }
 
+@keyframes spin {
+    0% {
+        rotate: 0deg
+    }
+    100% {
+        rotate: 360deg
+    }
+}
+
 @keyframes invis {
     0% {
         opacity: 0;
@@ -110,6 +119,20 @@ img {
     width: 15rem;
     height: 15rem;
     object-fit: cover; 
+}
+
+.layout .main-cookie .shine {
+    animation: spin 18s linear infinite; 
+    width: 30rem;
+    height: 30rem;
+    filter: opacity(0.6);
+}
+
+.layout .main-cookie .shine2 {
+    animation: spin 18s linear infinite reverse; 
+    width: 30rem;
+    height: 30rem;
+    filter: opacity(0.2);
 }
 
 .layout .username {

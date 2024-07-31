@@ -18,7 +18,7 @@
 }
 
 .green{
-  color:rgb(100,231,100);
+  color:rgb(119, 247, 119);
   font-weight: 600;
 }
 
@@ -75,7 +75,7 @@
 
 .buildingTooltip .top {
   display: grid;
-  grid-template-columns: 0.5fr 2fr 1fr;
+  grid-template-columns: 0.5fr 2fr 1.5fr;
 }
 
 .buildingTooltip .top h4 {
