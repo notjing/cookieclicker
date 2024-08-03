@@ -4,7 +4,8 @@ import "./styles.css?v=1.0";
 import cookieImage from './images/cookie.png';
 import poleImage from './images/woodenseperator.png';
 import horizontalPoleImage from "./images/woodenseperatorhorizontal.png"
-import menuImage from "./images/menu.png"
+import menuTopImage from "./images/menuTop.png"
+import menuBottomImage from "./images/menuBottom.png"
 import icons from "./images/icons.png"
 import shine from "./images/shine.png"
 import Building from "./components/Building";
@@ -224,6 +225,9 @@ function findImage(image, row, col) {
 const buildingImages = require.context('./images/buildings', false);
 const buildingImagesList = buildingImages.keys().map(image => buildingImages(image));
 
+const buildingBackgroundImages = require.context('./images/buildingBackgrounds', false);
+const buildingBackgroundImagesList = buildingBackgroundImages.keys().map(image => buildingBackgroundImages(image));
+
 const milkImages = require.context('./images/milk', false);
 const milkImagesList = milkImages.keys().map(image => milkImages(image));
 
@@ -234,6 +238,46 @@ export const upgrades = [
   {
     id: 1, name: "Carpal tunnel prevention cream", desc: "The mouse and cursors are twice as efficient.", quote: "it... it hurts to click...", price: 500, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 1]] }, img: await findImage(icons, 2, 1), afford: false
   },
+  {
+    id: 2, name: "Ambidextrous", desc: "The mouse and cursors are twice as efficient.", quote: "Look ma, both hands!", price: 10000, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 10]] }, img: await findImage(icons, 3, 1), afford: false
+  },
+  {
+    id: 3, name: "Thousand fingers", desc: "The mouse and cursors gain +0.1 cookies for each non-cursor object owned.", quote: "clickity", price: 1e5, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 25]] }, img: await findImage(icons, 14, 1), afford: false
+  },
+  {
+    id: 4, name: "Million fingers", desc: "Multiplies the gain from Thousand fingers by 5.", quote: "clickityclickity", price: 1e7, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 50]] }, img: await findImage(icons, 15, 1), afford: false
+  },
+  {
+    id: 5, name: "Billion fingers", desc: "Multiplies the gain from Thousand fingers by 10.", quote: "clickityclickityclickity", price: 1e8, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 100]] }, img: await findImage(icons, 16, 1), afford: false
+  },
+  {
+    id: 6, name: "Trillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "clickityclickityclickityclickity", price: 1e9, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 150]] }, img: await findImage(icons, 17, 1), afford: false
+  },
+  {
+    id: 7, name: "Quadrillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "clickityclickityclickityclickityclick", price: 1e10, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 200]] }, img: await findImage(icons, 18, 1), afford: false
+  },
+  {
+    id: 8, name: "Quintillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "man, just go click click click click click, it’s real easy, man.", price: 1e13, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 250]] }, img: await findImage(icons, 19, 1), afford: false
+  },
+  {
+    id: 9, name: "Sextillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "sometimes things just click", price: 1e16, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 300]] }, img: await findImage(icons, 20, 1), afford: false
+  },
+  {
+    id: 10, name: "Septillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "[cursory flavor text]", price: 1e19, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 350]] }, img: await findImage(icons, 29, 1), afford: false
+  },
+  {
+    id: 11, name: "Octillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Turns out you can quite put your finger on it.", price: 1e22, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 400]] }, img: await findImage(icons, 31, 1), afford: false
+  },
+  {
+    id: 12, name: "Nonillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Only for the freakiest handshakes.", price: 1e25, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 450]] }, img: await findImage(icons, 32, 1), afford: false
+  },
+  {
+    id: 13, name: "Decillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Only for the freakiest handshakes.", price: 1e28, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 500]] }, img: await findImage(icons, 35, 1), afford: false
+  },
+  {
+    id: 14, name: "Undecillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Only for the freakiest handshakes.", price: 1e31, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 550]] }, img: await findImage(icons, 37, 1), afford: false
+  },
+
 
 ];
 
@@ -242,7 +286,7 @@ export const upgrades = [
 function App() {
   const [username, changeUsername] = useState("Default Username");
   const [perClick, changePerClick] = useState(1);
-  const [totalCookies, changeTotalCookies] = useState(1e18);
+  const [totalCookies, changeTotalCookies] = useState(1e50);
   const [primarySelected, changePrimarySelected] = useState(SHOP_OPTIONS.BUY);
   const [bulkSelected, changeBulkSelected] = useState(SHOP_OPTIONS.ONE);
   const [numAchievements, changeNumAchievements] = useState(0);
@@ -253,6 +297,8 @@ function App() {
   const [updateNews, changeUpdateNews] = useState(false);
   const [renderAllUpgrades, changeRenderAllUpgrades] = useState(false);
   const [tooltipImages, changeTooltipImages] = useState([]);
+
+  const [menuHovered, changeMenuHovered] = useState(0); 
   
   const [{ prices, amts }, buildingDispatch] = useReducer(buildingReducer, {
     prices: [
@@ -431,13 +477,15 @@ function App() {
     upgrades[id].bought = true;
     changeNumUpgrades(numUpgrades + 1)
     switch (id) {
-      case 0:
-        MULTIPLIER[BUILDINGS.CURSOR] *= 2; break;
-      case 1:
+      case 0: case 1:
         MULTIPLIER[BUILDINGS.CURSOR] *= 2; break;
       
     }
     
+  }
+
+  function sortByPrice(a,b){
+    return a.price < b.price;
   }
 
   function renderUpgrades() {
@@ -446,7 +494,6 @@ function App() {
     let shown = 0;
     for (let i = 0; i < upgrades.length; i++) {
       if (upgrades[i].unlocked && !upgrades[i].bought) {
-        console.log(`Upgrade ${upgrades[i].id} rendered`)
         ret.push(
           <Upgrade id={upgrades[i].id} name={upgrades[i].name} desc={upgrades[i].desc} quote={upgrades[i].quote} price={upgrades[i].price} req={upgrades[i].req} img={upgrades[i].img}
             borderlessImg={upgrades[i].borderlessImg} afford={upgrades[i].afford} cookies={totalCookies} onClick={implementUpgrades}
@@ -456,7 +503,34 @@ function App() {
       }
       if (shown >= show) break;
     }
+    ret.sort(sortByPrice)
     return ret
+  }
+
+  function renderBackgrounds(){
+    let ret = []
+    for(let i = 1; i <= buildingBackgroundImagesList.length; i++){
+      if(amts[i] > 0){
+        ret.push(
+          <>
+            <div className="building-background">
+              <img src = {buildingBackgroundImagesList[i-1]} /> 
+              <img src = {buildingBackgroundImagesList[i-1]} /> 
+              <img src = {buildingBackgroundImagesList[i-1]} /> 
+              <img src = {buildingBackgroundImagesList[i-1]} /> 
+              <img src = {buildingBackgroundImagesList[i-1]} /> 
+              <img src = {buildingBackgroundImagesList[i-1]} /> 
+            </div>
+
+            <div className="divider-three">
+              <img src={horizontalPoleImage}></img>
+            </div>
+          </>
+        
+        );
+      } 
+    }
+    return ret;
   }
 
   function generateNews() {
@@ -509,9 +583,10 @@ function App() {
       <div className="mid-col">
         <div className="menu">
           <div className="left-menu">
-            <img src={menuImage}></img>
-            <button className="options"> Options </button>
-            <button className="stats"> Stats </button>
+          <img src={menuTopImage} className = {menuHovered === 1 ? "bright" : ""}></img>
+          <img src={menuBottomImage} className = {menuHovered === 2 ? "bright" : ""}></img>
+            <button className={"options menu-button" + (menuHovered === 1 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(1)} onMouseLeave={() => changeMenuHovered(0)}> Options </button>
+            <button className={"stats menu-button" + (menuHovered === 2 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(2)} onMouseLeave={() => changeMenuHovered(0)}> Stats </button>
           </div>
 
           <div className="mid-menu">
@@ -521,13 +596,11 @@ function App() {
           </div>
 
           <div className="right-menu">
-            <img className="y-reflect" src={menuImage}></img>
-            <button className="info"> Info </button>
-            <button className="legacy"> Legacy </button>
+            <img className= {"y-reflect" + (menuHovered === 3 ? " bright" : "")} src={menuTopImage}></img>
+            <img className= {"y-reflect" + (menuHovered === 4 ? " bright" : "")} src={menuBottomImage}></img>
+            <button className={"info menu-button" + (menuHovered === 3 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(3)} onMouseLeave={() => changeMenuHovered(0)}> Info </button>
+            <button className={"legacy menu-button" + (menuHovered === 4 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(4)} onMouseLeave={() => changeMenuHovered(0)}> Legacy </button>
           </div>
-
-
-
         </div>
 
         <div className="divider-three">
@@ -535,7 +608,7 @@ function App() {
         </div>
 
         <div className="building-backgrounds">
-
+            {renderBackgrounds()}
         </div>
 
       </div>

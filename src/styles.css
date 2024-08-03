@@ -87,12 +87,20 @@ img {
     color: white;
 }
 
+.bright {
+    filter: brightness(200%);
+}
+
+.tooltip-portal{
+    overflow:hidden;
+}
+
 .layout {
     display: grid;
-    grid-template-columns: 2fr 0.75rem 4fr 0.75rem 1.5fr;flex: 1 1 auto;
+    grid-template-columns: 2.29fr 0.75rem 4fr 0.75rem 1.5fr;flex: 1 1 auto;
     height: 100vh;
     width: 100%;
-    overflow:hidden;
+    overflow: hidden;
 }
 
 .layout .left-col {
@@ -175,7 +183,7 @@ img {
 .layout .left-col .milk img {
     animation: slide-horizontal 3s linear infinite; 
     opacity: 85%;
-    translate: -35.419% 0%;
+    translate: -30% 0%;
     filter: saturate(1.5);
     filter: brightness(1.1);
 
@@ -201,6 +209,7 @@ img {
 .layout .mid-col .menu{
     display: grid;
     height: 100%;
+    font-size: 0;
     grid-template-columns: 1fr 6.666fr 1fr;
     grid-template-rows: 1fr 1fr;
     max-height: 6rem;
@@ -209,18 +218,34 @@ img {
 
 
 .layout .mid-col .menu img {
-    height: 100%;
+    height: 50%;
+    margin: 0;
     object-fit: cover;
 }
 
 .layout .mid-col .menu .left-menu .options{
     position: absolute;
-    transform: translate(-140%, 100%);
+    transform: translate(-105%, -100%);
 }
 
 .layout .mid-col .menu .left-menu .stats{
     position: absolute;
-    transform: translate(-175%, 275%);
+    transform: translate(-105%, 0%);
+}
+
+.layout .mid-col .menu-button{
+    height: 3rem;
+    width: 6rem;
+    color: grey;
+    font-size: 1.2rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.layout .mid-col .left-menu button:hover{
+   filter: brightness(200%);
 }
 
 .layout .mid-col .menu .mid-menu{
@@ -238,19 +263,30 @@ img {
     animation: fadeInSlow 10s linear infinite forwards, slide-vertical 10s linear infinite forwards; 
 }
 
+.layout .mid-col .menu .mid-menu h3{
+    font-size: 1.2rem;
+}
+
 .layout .mid-col .menu .right-menu .info{
     position: absolute;
-    transform: translate(-175%, 100%);
+    transform: translate(-105%, -100%);
 }
 
 .layout .mid-col .menu .right-menu .legacy{
     position: absolute;
-    transform: translate(-140%, 275%);
+    transform: translate(-105%, 0%);
 }
 
 .layout .mid-col .building-backgrounds{
     background-image: url("images/background.jpg");
+    overflow-y: scroll;
 }
+
+.building-background {
+    display: flex; /* Use flexbox to align items in a row */
+    overflow: hidden; /* Hide overflow */
+    white-space: nowrap; /* Prevent wrapping */
+  }
 
 .layout .divider-two {
     grid-column: 4 / 4;
@@ -270,6 +306,7 @@ img {
     padding: 0;
     z-index: 1;
     position: relative;
+    overflow-y : scroll;
     height: 100vh;
     background-image: linear-gradient(rgb(0, 0, 0, 0.6) 0%,rgb(0,0,0,0.6) 20%, rgb(0,0,0,0.4) 30%,  rgb(0,0,30, 0.4) 70%, rgb(0, 0, 0, 0.8) 100%),  url("images/background.jpg");
 }
@@ -315,7 +352,7 @@ img {
 
 .layout .right-col .shop-buildings {
     height: 100%;
-    overflow-y: scroll;
+
 
 }
 
