@@ -14,6 +14,7 @@ class Building extends Component {
     this.state = {
       hovered: false,
       buttonRef: React.createRef(),
+      ttRef: React.createRef(),
       x: 0,
       y: 0
     };
@@ -88,7 +89,7 @@ class Building extends Component {
           </button>
 
           {this.state.hovered &&
-            <Tooltip x={this.state.buttonRef.current.getBoundingClientRect().x} y={Math.min(this.state.y + 100, window.innerHeight + 25)} width={this.state.buttonRef.current.getBoundingClientRect().width}>
+            <Tooltip x={this.state.buttonRef.current.getBoundingClientRect().x} y={this.state.y} width={this.state.buttonRef.current.getBoundingClientRect().width}>
                <div className="buildingTooltip">
                 <div className="top">
                   <img src={tooltipImg}></img>

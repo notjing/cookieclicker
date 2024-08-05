@@ -277,15 +277,31 @@ img {
     transform: translate(-105%, 0%);
 }
 
+.info-menu{
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    overflow-y: scroll;
+}
+
+.info-menu .title{
+    margin-top: 2rem;
+    color: white;
+    text-align: center;
+    font-size: 1.5rem;
+    text-shadow: 0 0.5px 0 #ccc, 0 1px 0 #ccc, 0 1.5px 0 #ccc;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff;
+}
+
 .layout .mid-col .building-backgrounds{
     background-image: url("images/background.jpg");
     overflow-y: scroll;
 }
 
 .building-background {
-    display: flex; /* Use flexbox to align items in a row */
-    overflow: hidden; /* Hide overflow */
-    white-space: nowrap; /* Prevent wrapping */
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
 .layout .divider-two {

@@ -10,6 +10,7 @@ import icons from "./images/icons.png"
 import shine from "./images/shine.png"
 import Building from "./components/Building";
 import Upgrade from "./components/Upgrade";
+import Info from "./components/Info";
 import NumberAbbreviator from "./components/NumberAbbreviator";
 
 export const BUILDINGS = {
@@ -299,6 +300,7 @@ function App() {
   const [tooltipImages, changeTooltipImages] = useState([]);
 
   const [menuHovered, changeMenuHovered] = useState(0); 
+  const [menuSelected, changeMenuSelected] = useState("main")
   
   const [{ prices, amts }, buildingDispatch] = useReducer(buildingReducer, {
     prices: [
@@ -473,6 +475,13 @@ function App() {
     
   }
 
+  function handleMenuClicked(menu){
+    if(menu == menuSelected) changeMenuSelected("main")
+    else{
+      changeMenuSelected(menu)
+    }
+  }
+
   function implementUpgrades(id) {
     upgrades[id].bought = true;
     changeNumUpgrades(numUpgrades + 1)
@@ -596,9 +605,9 @@ function App() {
           </div>
 
           <div className="right-menu">
-            <img className= {"y-reflect" + (menuHovered === 3 ? " bright" : "")} src={menuTopImage}></img>
+            <img className= {"y-reflect" + (menuHovered === 3 || menuSelected === "info" ? " bright" : "")} src={menuTopImage}></img>
             <img className= {"y-reflect" + (menuHovered === 4 ? " bright" : "")} src={menuBottomImage}></img>
-            <button className={"info menu-button" + (menuHovered === 3 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(3)} onMouseLeave={() => changeMenuHovered(0)}> Info </button>
+            <button className={"info menu-button" + (menuHovered === 3 || menuSelected === "info" ? " bright" : "")} onMouseEnter={() => changeMenuHovered(3)} onMouseLeave={() => changeMenuHovered(0)} onClick={() => handleMenuClicked("info")}> Info </button>
             <button className={"legacy menu-button" + (menuHovered === 4 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(4)} onMouseLeave={() => changeMenuHovered(0)}> Legacy </button>
           </div>
         </div>
@@ -607,9 +616,17 @@ function App() {
           <img src={horizontalPoleImage}></img>
         </div>
 
-        <div className="building-backgrounds">
+        {
+          menuSelected === "main"?
+          <div className="building-backgrounds">
             {renderBackgrounds()}
-        </div>
+          </div>
+          :
+          menuSelected === "info"?
+          <Info></Info>
+          : null
+        }
+        
 
       </div>
 
@@ -763,14 +780,14 @@ function App() {
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.JAVASCRIPT} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.JAVASCRIPT]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.JAVASCRIPT))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.JAVASCRIPT]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="Create cookies from the very code this game was written in." img={buildingImagesList[11]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.JAVASCRIPT]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.IDLE} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.IDLE]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.IDLE))}
-            amt={amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
+            amt={amts[BUILDINGS_INDEX[BUILDINGS.IDLE]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="There's been countless other idle universes running alongside our own. You've finally found a way to hijack their production and convert whatever they've been making into cookies!" img={buildingImagesList[10]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.IDLE]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
@@ -788,6 +805,8 @@ function App() {
             calculateSellPrice={calculateSellPrice} quote="You, alone, are the reason behind all these cookies. You figure if there were more of you... maybe you could make even more." img={buildingImagesList[19]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.YOU]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
+
+          <br></br> <br></br> <br></br>
 
 
 
