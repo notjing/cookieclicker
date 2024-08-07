@@ -287,7 +287,9 @@ export const upgrades = [
 function App() {
   const [username, changeUsername] = useState("Default Username");
   const [perClick, changePerClick] = useState(1);
-  const [totalCookies, changeTotalCookies] = useState(1e50);
+  const [cookiesClicked, changeCookiesClicked] = useState(0);
+  const [totalCookies, changeTotalCookies] = useState(0);
+  const [ascensionCookies, changeAscensionCookies] = useState(0);
   const [primarySelected, changePrimarySelected] = useState(SHOP_OPTIONS.BUY);
   const [bulkSelected, changeBulkSelected] = useState(SHOP_OPTIONS.ONE);
   const [numAchievements, changeNumAchievements] = useState(0);
@@ -396,6 +398,7 @@ function App() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       changeTotalCookies(prevTotalCookies => prevTotalCookies + totalCps() / 60);
+      changeAscensionCookies(prev => prev + totalCps() / 60);
       for(const building in BUILDINGS){
         COOKIES_BAKED[BUILDINGS[building]] += BASE_CPS[BUILDINGS[building]] * amts[BUILDINGS_INDEX[BUILDINGS[building]]] * MULTIPLIER[BUILDINGS[building]] / 60;
       }
@@ -451,6 +454,7 @@ function App() {
 
   function cookieClicked() {
     changeTotalCookies(totalCookies + perClick);
+    changeCookiesClicked(cookiesClicked + perClick)
   }
 
   function handleUpgradeEnter() {
@@ -559,6 +563,30 @@ function App() {
     return true
   }
 
+  function totalBuildings(){
+    return amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]] + amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]] + amts[BUILDINGS_INDEX[BUILDINGS.FARM]] + amts[BUILDINGS_INDEX[BUILDINGS.MINE]] + amts[BUILDINGS_INDEX[BUILDINGS.FACTORY]] + amts[BUILDINGS_INDEX[BUILDINGS.BANK]] + amts[BUILDINGS_INDEX[BUILDINGS.TEMPLE]] + amts[BUILDINGS_INDEX[BUILDINGS.WIZARD]] + amts[BUILDINGS_INDEX[BUILDINGS.SHIPMENT]] + amts[BUILDINGS_INDEX[BUILDINGS.ALCHEMY]] + amts[BUILDINGS_INDEX[BUILDINGS.PORTAL]] + amts[BUILDINGS_INDEX[BUILDINGS.TIME]] + amts[BUILDINGS_INDEX[BUILDINGS.ANTIMATTER]] + amts[BUILDINGS_INDEX[BUILDINGS.PRISM]] + amts[BUILDINGS_INDEX[BUILDINGS.CHANCE]] + amts[BUILDINGS_INDEX[BUILDINGS.FRACTAL]] + amts[BUILDINGS_INDEX[BUILDINGS.JAVASCRIPT]] + amts[BUILDINGS_INDEX[BUILDINGS.IDLE]] + amts[BUILDINGS_INDEX[BUILDINGS.CORTEX]] + amts[BUILDINGS_INDEX[BUILDINGS.YOU]]
+  }
+
+  function Stats(){
+    return(
+      <div className="stats-menu">
+        <div className="white title"> Statistics </div>
+        <div className="white subtitle"> General </div>
+        <div className= "grey text"> Cookies in bank: <img className="shrink-cookie" src={cookieImage}></img> <span className="white">{totalCookies < 1e6? Math.floor(totalCookies): NumberAbbreviator(totalCookies)}</span></div>
+        <div className= "grey text"> Cookies baked (this ascension): <img className="shrink-cookie" src={cookieImage}></img> <span className="white">{totalCookies < 1e6? Math.floor(totalCookies): NumberAbbreviator(totalCookies)}</span></div>
+        <div className= "grey text"> Cookies baked (all time): <img className="shrink-cookie" src={cookieImage}></img> <span className="white">[ascension not implemented]</span></div>
+        <div className= "grey text"> Cookies forfeited by ascending: <img className="shrink-cookie" src={cookieImage}></img> <span className="white">[ascension not implemented]</span></div>
+        <div className= "grey text"> Legacy started: </div>
+        <div className= "grey text"> Run started: </div>
+        <div className= "grey text"> Buildings owned: <span className="white">{totalBuildings()} </span></div>
+        <div className= "grey text"> Cookies per second: <span className="white">{totalCps()} </span></div>
+        <div className= "grey text"> Cookies per click: <span className="white">{perClick} </span></div>
+        <div className= "grey text"> Hand-made cookies: <span className="white">{cookiesClicked} </span></div>
+        <div className= "grey text"> Golden cookie clicks <span className="white">[Not Implemented] </span></div>
+      </div>
+    )
+  }
+
 
   return (
     <div className="layout">
@@ -568,7 +596,7 @@ function App() {
         </div>
 
         <div>
-          <div className="cookie-count"> <h1> {NumberAbbreviator(totalCookies)} cookies</h1> </div>
+          <div className="cookie-count"> <h1> {totalCookies < 1e6? Math.floor(totalCookies): NumberAbbreviator(totalCookies)} cookies</h1> </div>
           <div className="cookie-rate">per second: {NumberAbbreviator(Math.round(totalCps() * 10) / 10)}</div>
         </div>
 
@@ -595,7 +623,7 @@ function App() {
           <img src={menuTopImage} className = {menuHovered === 1 ? "bright" : ""}></img>
           <img src={menuBottomImage} className = {menuHovered === 2 ? "bright" : ""}></img>
             <button className={"options menu-button" + (menuHovered === 1 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(1)} onMouseLeave={() => changeMenuHovered(0)}> Options </button>
-            <button className={"stats menu-button" + (menuHovered === 2 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(2)} onMouseLeave={() => changeMenuHovered(0)}> Stats </button>
+            <button className={"stats menu-button" + (menuHovered === 2 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(2)} onMouseLeave={() => changeMenuHovered(0)} onClick={() => handleMenuClicked("stats")}> Stats </button>
           </div>
 
           <div className="mid-menu">
@@ -616,16 +644,27 @@ function App() {
           <img src={horizontalPoleImage}></img>
         </div>
 
-        {
-          menuSelected === "main"?
-          <div className="building-backgrounds">
-            {renderBackgrounds()}
-          </div>
-          :
-          menuSelected === "info"?
-          <Info></Info>
-          : null
-        }
+       
+          {
+              menuSelected === "main"?
+              <div className="building-backgrounds">
+                {renderBackgrounds()}
+              </div>
+              :
+            <div className="sub-menu">
+              {
+                menuSelected === "info"?
+                <Info></Info>
+                : 
+                menuSelected == "stats"?
+                <>
+                  {Stats()}
+                </>
+                : null
+              }
+            </div>
+          }
+          
         
 
       </div>

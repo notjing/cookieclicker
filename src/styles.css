@@ -87,8 +87,24 @@ img {
     color: white;
 }
 
+.grey{
+    color: rgb(184, 181, 181);
+}
+
+
 .bright {
     filter: brightness(200%);
+}
+
+.shrink-cookie{
+    position: relative;
+    top: 4px;
+    width: 2%;
+    height: auto;
+    aspect-ratio: 1/1;
+    margin: 0;
+    padding: 0;
+
 }
 
 .tooltip-portal{
@@ -277,20 +293,44 @@ img {
     transform: translate(-105%, 0%);
 }
 
-.info-menu{
+.sub-menu{
     display: flex;
     flex-direction: column;
     background-color: black;
     overflow-y: scroll;
 }
 
-.info-menu .title{
+.info-menu a:link{
+    color:grey
+}
+
+.info-menu a:hover{
+    filter:brightness(2)
+}
+
+.info-menu a:visited {
+   color: grey
+  }
+
+.sub-menu .title{
     margin-top: 2rem;
-    color: white;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     text-shadow: 0 0.5px 0 #ccc, 0 1px 0 #ccc, 0 1.5px 0 #ccc;
     text-shadow: 0 0 10px #fff, 0 0 20px #fff;
+    font-weight: 600;
+}
+
+.sub-menu .subtitle{
+  font-size: 1.3rem;
+  margin-left: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.sub-menu .text{
+    margin-left: 1rem;
 }
 
 .layout .mid-col .building-backgrounds{
