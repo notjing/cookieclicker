@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/cookieclicker/static/css/main.3296812c.css",
+    "main.js": "/cookieclicker/static/js/main.30d41614.js",
+    "static/js/453.5053ec79.chunk.js": "/cookieclicker/static/js/453.5053ec79.chunk.js",
+    "static/media/cookie.png": "/cookieclicker/static/media/cookie.e9be7881828a8b2469cf.png",
+    "static/media/button_background.png": "/cookieclicker/static/media/button_background.711f3c03690504ca2f2a.png",
+    "static/media/icons.png": "/cookieclicker/static/media/icons.7d8af7ed62150f495581.png",
+    "static/media/milkPlain.png": "/cookieclicker/static/media/milkPlain.fa529c2c1a586a4b9ff0.png",
+    "static/media/background.jpg": "/cookieclicker/static/media/background.4695978a367312160707.jpg",
+    "static/media/woodenseperator.png": "/cookieclicker/static/media/woodenseperator.a5476ed11f0bfb822f7c.png",
+    "static/media/woodenseperatorhorizontal.png": "/cookieclicker/static/media/woodenseperatorhorizontal.31d08978e31ab6a30003.png",
+    "index.html": "/cookieclicker/index.html",
+    "main.3296812c.css.map": "/cookieclicker/static/css/main.3296812c.css.map",
+    "main.30d41614.js.map": "/cookieclicker/static/js/main.30d41614.js.map",
+    "453.5053ec79.chunk.js.map": "/cookieclicker/static/js/453.5053ec79.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3296812c.css",
+    "static/js/main.30d41614.js"
+  ]
+}
