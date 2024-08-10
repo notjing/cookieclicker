@@ -23,9 +23,13 @@
 }
 
 .building {
-  width: 100%;
-  overflow-x: hidden;
+  display: flex;
+  width: 100%; /* Full width */
+  height: auto; /* Full height or specify a height */
+  overflow: hidden; /* Hide overflow */
+  aspect-ratio: 50/9;
 }
+
 
 .building .col-right {
   grid-column: 3/3;
@@ -46,14 +50,15 @@
 }
 
 .building button {
-  width: 100%;
-  height: 4rem;
+  top: 0;
+  left: 0;
+  width: 100%; /* Fill the width of the parent */
+  height: 100%; /* Fill the height of the parent */
   cursor: pointer;
   background-image: url("./images/button_background.png");
   background-size: cover;
-  filter:brightness(1.25);
+  filter: brightness(1.25);
 }
-
 .building button:hover {
   filter:brightness(1.45);
 }
@@ -126,8 +131,16 @@
 .building .button-contents {
   display: grid;
   grid-template-columns: 1fr 2fr 2fr;
+  height: 100%; /* Ensure it fills the height of the button */
+  width: 100%; /* Ensure it fills the width of the button */
   filter:brightness(0.8)
 }
+
+.building .button-contents img{
+  max-height: 100%;
+  object-fit: contain;
+}
+
 
 .building .button-contents:hover {
   filter:brightness(0.689)

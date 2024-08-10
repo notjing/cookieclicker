@@ -12,6 +12,7 @@ import Building from "./components/Building";
 import Upgrade from "./components/Upgrade";
 import Info from "./components/Info";
 import NumberAbbreviator from "./components/NumberAbbreviator";
+import BackgroundBuilding from "./components/BackgroundBuilding";
 
 export const BUILDINGS = {
   CURSOR: "Cursor",
@@ -59,6 +60,29 @@ const BUILDINGS_INDEX = {
   [BUILDINGS.YOU]: 19
 }
 
+const REVERSE_BUILDINGS_INDEX = {
+  0 : [BUILDINGS.CURSOR],
+  1 : [BUILDINGS.GRANDMA],
+  2 : [BUILDINGS.FARM],
+  3 : [BUILDINGS.MINE],
+  4 : [BUILDINGS.FACTORY],
+  5 : [BUILDINGS.BANK],
+  6 : [BUILDINGS.TEMPLE],
+  7 : [BUILDINGS.WIZARD],
+  8 : [BUILDINGS.SHIPMENT],
+  9 : [BUILDINGS.ALCHEMY],
+  10 : [BUILDINGS.PORTAL],
+  11 : [BUILDINGS.TIME],
+  12 : [BUILDINGS.ANTIMATTER],
+  13 : [BUILDINGS.PRISM],
+  14 : [BUILDINGS.CHANCE],
+  15 : [BUILDINGS.FRACTAL],
+  16 : [BUILDINGS.JAVASCRIPT],
+  17 : [BUILDINGS.IDLE],
+  18 : [BUILDINGS.CORTEX],
+  19 : [BUILDINGS.YOU]
+}
+
 export const BASE_PRICE = {
   [BUILDINGS.CURSOR]: 1.5e1,
   [BUILDINGS.GRANDMA]: 1e2,
@@ -87,7 +111,7 @@ export const BASE_CPS = {
   [BUILDINGS.GRANDMA]: 1,
   [BUILDINGS.FARM]: 8,
   [BUILDINGS.MINE]: 4.7e1,
-  [BUILDINGS.FACTORY]: 2.62,
+  [BUILDINGS.FACTORY]: 2.6e2,
   [BUILDINGS.BANK]: 1.4e3,
   [BUILDINGS.TEMPLE]: 7.8e3,
   [BUILDINGS.WIZARD]: 4.4e4,
@@ -168,12 +192,12 @@ function buildingReducer(state, { building, operation, bulkSelected, totalCookie
           ...state,
           amts: state.amts.map((amt, index) =>
             index === BUILDINGS_INDEX[building]
-              ? amt + bulkSelected 
+              ? amt + bulkSelected
               : amt
           ),
           prices: state.prices.map((price, index) =>
             index === BUILDINGS_INDEX[building]
-              ? Math.ceil(BASE_PRICE[building] * 1.15 ** (state.amts[BUILDINGS_INDEX[building]] + bulkSelected)) 
+              ? Math.ceil(BASE_PRICE[building] * 1.15 ** (state.amts[BUILDINGS_INDEX[building]] + bulkSelected))
               : price
           )
         };
@@ -189,7 +213,7 @@ function buildingReducer(state, { building, operation, bulkSelected, totalCookie
         ),
         prices: state.prices.map((price, index) =>
           index === BUILDINGS_INDEX[building]
-            ? Math.ceil(BASE_PRICE[building] * 1.15 ** (Math.max(state.amts[BUILDINGS_INDEX[building]] - bulkSelected, 0))) 
+            ? Math.ceil(BASE_PRICE[building] * 1.15 ** (Math.max(state.amts[BUILDINGS_INDEX[building]] - bulkSelected, 0)))
             : price
         )
       };
@@ -231,6 +255,9 @@ const buildingBackgroundImagesList = buildingBackgroundImages.keys().map(image =
 
 const milkImages = require.context('./images/milk', false);
 const milkImagesList = milkImages.keys().map(image => milkImages(image));
+
+const backgroundBuildingImages = require.context('./images/backgroundBuildings', false);
+const backgroundBuildingImagesList = backgroundBuildingImages.keys().map(image => backgroundBuildingImages(image));
 
 export const upgrades = [
   {
@@ -282,13 +309,36 @@ export const upgrades = [
 
 ];
 
+const BACKGROUND_BUILDINGS = {
+  [BUILDINGS.CURSOR]: [],
+  [BUILDINGS.GRANDMA]: [<BackgroundBuilding x = {0} y = {0} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.GRANDMA] - 1]}> </BackgroundBuilding>],
+  [BUILDINGS.FARM]: [],
+  [BUILDINGS.MINE]: [],
+  [BUILDINGS.FACTORY]: [],
+  [BUILDINGS.BANK]: [],
+  [BUILDINGS.TEMPLE]: [],
+  [BUILDINGS.WIZARD]: [],
+  [BUILDINGS.SHIPMENT]: [],
+  [BUILDINGS.ALCHEMY]: [],
+  [BUILDINGS.PORTAL]: [],
+  [BUILDINGS.TIME]: [],
+  [BUILDINGS.ANTIMATTER]: [],
+  [BUILDINGS.PRISM]: [],
+  [BUILDINGS.CHANCE]: [],
+  [BUILDINGS.FRACTAL]: [],
+  [BUILDINGS.JAVASCRIPT]: [],
+  [BUILDINGS.IDLE]: [],
+  [BUILDINGS.CORTEX]: [],
+  [BUILDINGS.YOU]: [],
+
+}
 
 
 function App() {
   const [username, changeUsername] = useState("Default Username");
   const [perClick, changePerClick] = useState(1);
   const [cookiesClicked, changeCookiesClicked] = useState(0);
-  const [totalCookies, changeTotalCookies] = useState(0);
+  const [totalCookies, changeTotalCookies] = useState(100);
   const [ascensionCookies, changeAscensionCookies] = useState(0);
   const [primarySelected, changePrimarySelected] = useState(SHOP_OPTIONS.BUY);
   const [bulkSelected, changeBulkSelected] = useState(SHOP_OPTIONS.ONE);
@@ -301,9 +351,9 @@ function App() {
   const [renderAllUpgrades, changeRenderAllUpgrades] = useState(false);
   const [tooltipImages, changeTooltipImages] = useState([]);
 
-  const [menuHovered, changeMenuHovered] = useState(0); 
+  const [menuHovered, changeMenuHovered] = useState(0);
   const [menuSelected, changeMenuSelected] = useState("main")
-  
+
   const [{ prices, amts }, buildingDispatch] = useReducer(buildingReducer, {
     prices: [
       BASE_PRICE[BUILDINGS.CURSOR],
@@ -329,26 +379,26 @@ function App() {
     ],
 
     amts: [
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
-      0 ,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
     ]
   });
 
@@ -399,10 +449,10 @@ function App() {
     const intervalId = setInterval(() => {
       changeTotalCookies(prevTotalCookies => prevTotalCookies + totalCps() / 60);
       changeAscensionCookies(prev => prev + totalCps() / 60);
-      for(const building in BUILDINGS){
+      for (const building in BUILDINGS) {
         COOKIES_BAKED[BUILDINGS[building]] += BASE_CPS[BUILDINGS[building]] * amts[BUILDINGS_INDEX[BUILDINGS[building]]] * MULTIPLIER[BUILDINGS[building]] / 60;
       }
-    
+
     }, 1000 / 60);
     return () => clearInterval(intervalId);
   }, [totalCps()]);
@@ -414,11 +464,10 @@ function App() {
 
   useEffect(() => {
     for (let i = 0; i < upgrades.length; i++) {
-      if (!upgrades[i].bought && !upgrades[i].unlocked && checkRequirements(upgrades[i].req)){
+      if (!upgrades[i].bought && !upgrades[i].unlocked && checkRequirements(upgrades[i].req)) {
         upgrades[i].unlocked = true
         changeUnlockedUpgrades(unlockedUpgrades + 1)
-        console.log("Upgrade Unlocked")
-      } 
+      }
     }
   }, [totalCookies, amts])
 
@@ -430,17 +479,17 @@ function App() {
 
   useEffect(() => {
     async function loadImage() {
-      changeTooltipImages([await findImage(icons, 1, 1), await findImage(icons, 1, 2), await findImage(icons, 1, 3), await findImage(icons, 1, 4), await findImage(icons, 1, 5), 
-        await findImage(icons, 1, 16), await findImage(icons, 1, 17), await findImage(icons, 1, 18), await findImage(icons, 1, 6), await findImage(icons, 1, 7), await findImage(icons, 1, 8), 
-        await findImage(icons, 1, 9), await findImage(icons, 1, 14), await findImage(icons, 1, 15), await findImage(icons, 1, 20), await findImage(icons, 1, 21), await findImage(icons, 1, 33), 
-         await findImage(icons, 1, 34), await findImage(icons, 1, 35), await findImage(icons, 1, 36)])
+      changeTooltipImages([await findImage(icons, 1, 1), await findImage(icons, 1, 2), await findImage(icons, 1, 3), await findImage(icons, 1, 4), await findImage(icons, 1, 5),
+      await findImage(icons, 1, 16), await findImage(icons, 1, 17), await findImage(icons, 1, 18), await findImage(icons, 1, 6), await findImage(icons, 1, 7), await findImage(icons, 1, 8),
+      await findImage(icons, 1, 9), await findImage(icons, 1, 14), await findImage(icons, 1, 15), await findImage(icons, 1, 20), await findImage(icons, 1, 21), await findImage(icons, 1, 33),
+      await findImage(icons, 1, 34), await findImage(icons, 1, 35), await findImage(icons, 1, 36)])
     }
     loadImage();
   }, []);
 
   function totalCps() {
     let ret = 0
-    for(const building in BUILDINGS){
+    for (const building in BUILDINGS) {
       const name = BUILDINGS[building];
       ret += amts[BUILDINGS_INDEX[name]] * MULTIPLIER[name] * BASE_CPS[name]
     }
@@ -474,14 +523,14 @@ function App() {
   }
 
   function calculateSellPrice(building) {
-        if (amts[BUILDINGS_INDEX[building]] < bulkSelected) return BASE_PRICE[building] * (1 - (1.15 ** amts[BUILDINGS_INDEX[building]])) / (1 - 1.15) * 0.25;
-        else return BASE_PRICE[building] * (1.15 ** (amts[BUILDINGS_INDEX[building]] - bulkSelected)) * (1 - (1.15 ** bulkSelected)) / (1 - 1.15) * 0.25;
-    
+    if (amts[BUILDINGS_INDEX[building]] < bulkSelected) return BASE_PRICE[building] * (1 - (1.15 ** amts[BUILDINGS_INDEX[building]])) / (1 - 1.15) * 0.25;
+    else return BASE_PRICE[building] * (1.15 ** (amts[BUILDINGS_INDEX[building]] - bulkSelected)) * (1 - (1.15 ** bulkSelected)) / (1 - 1.15) * 0.25;
+
   }
 
-  function handleMenuClicked(menu){
-    if(menu == menuSelected) changeMenuSelected("main")
-    else{
+  function handleMenuClicked(menu) {
+    if (menu == menuSelected) changeMenuSelected("main")
+    else {
       changeMenuSelected(menu)
     }
   }
@@ -492,12 +541,12 @@ function App() {
     switch (id) {
       case 0: case 1:
         MULTIPLIER[BUILDINGS.CURSOR] *= 2; break;
-      
+
     }
-    
+
   }
 
-  function sortByPrice(a,b){
+  function sortByPrice(a, b) {
     return a.price < b.price;
   }
 
@@ -520,28 +569,39 @@ function App() {
     return ret
   }
 
-  function renderBackgrounds(){
+  function renderBackgroundBuildings(building) {
     let ret = []
-    for(let i = 1; i <= buildingBackgroundImagesList.length; i++){
-      if(amts[i] > 0){
+    if(building === 0) return ret;
+    for (let j = 0; j < Math.min(BACKGROUND_BUILDINGS[REVERSE_BUILDINGS_INDEX[building]].length, amts[building]); j++) {
+      ret.push(BACKGROUND_BUILDINGS[REVERSE_BUILDINGS_INDEX[building]][j]) 
+    }
+    return ret;
+  }
+
+  function renderBackgrounds() {
+    let ret = []
+    for (let i = 1; i <= buildingBackgroundImagesList.length; i++) {
+      if (amts[i] > 0) {
         ret.push(
           <>
             <div className="building-background">
-              <img src = {buildingBackgroundImagesList[i-1]} /> 
-              <img src = {buildingBackgroundImagesList[i-1]} /> 
-              <img src = {buildingBackgroundImagesList[i-1]} /> 
-              <img src = {buildingBackgroundImagesList[i-1]} /> 
-              <img src = {buildingBackgroundImagesList[i-1]} /> 
-              <img src = {buildingBackgroundImagesList[i-1]} /> 
+              <img src={buildingBackgroundImagesList[i - 1]} />
+              <img src={buildingBackgroundImagesList[i - 1]} />
+              <img src={buildingBackgroundImagesList[i - 1]} />
+              <img src={buildingBackgroundImagesList[i - 1]} />
+              <img src={buildingBackgroundImagesList[i - 1]} />
+              <img src={buildingBackgroundImagesList[i - 1]} />
+              {renderBackgroundBuildings(i)}
             </div>
+            
 
             <div className="divider-three">
               <img src={horizontalPoleImage}></img>
             </div>
           </>
-        
+
         );
-      } 
+      }
     }
     return ret;
   }
@@ -559,30 +619,29 @@ function App() {
     if (req["cookies"]) {
       if (totalCookies < req["cookies"]) return false;
     }
-    console.log("requirements met")
     return true
   }
 
-  function totalBuildings(){
+  function totalBuildings() {
     return amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]] + amts[BUILDINGS_INDEX[BUILDINGS.GRANDMA]] + amts[BUILDINGS_INDEX[BUILDINGS.FARM]] + amts[BUILDINGS_INDEX[BUILDINGS.MINE]] + amts[BUILDINGS_INDEX[BUILDINGS.FACTORY]] + amts[BUILDINGS_INDEX[BUILDINGS.BANK]] + amts[BUILDINGS_INDEX[BUILDINGS.TEMPLE]] + amts[BUILDINGS_INDEX[BUILDINGS.WIZARD]] + amts[BUILDINGS_INDEX[BUILDINGS.SHIPMENT]] + amts[BUILDINGS_INDEX[BUILDINGS.ALCHEMY]] + amts[BUILDINGS_INDEX[BUILDINGS.PORTAL]] + amts[BUILDINGS_INDEX[BUILDINGS.TIME]] + amts[BUILDINGS_INDEX[BUILDINGS.ANTIMATTER]] + amts[BUILDINGS_INDEX[BUILDINGS.PRISM]] + amts[BUILDINGS_INDEX[BUILDINGS.CHANCE]] + amts[BUILDINGS_INDEX[BUILDINGS.FRACTAL]] + amts[BUILDINGS_INDEX[BUILDINGS.JAVASCRIPT]] + amts[BUILDINGS_INDEX[BUILDINGS.IDLE]] + amts[BUILDINGS_INDEX[BUILDINGS.CORTEX]] + amts[BUILDINGS_INDEX[BUILDINGS.YOU]]
   }
 
-  function Stats(){
-    return(
+  function Stats() {
+    return (
       <div className="stats-menu">
         <div className="white title"> Statistics </div>
         <div className="white subtitle"> General </div>
-        <div className= "grey text"> Cookies in bank: <img className="shrink-cookie" src={cookieImage}></img> <span className="white">{totalCookies < 1e6? Math.floor(totalCookies): NumberAbbreviator(totalCookies)}</span></div>
-        <div className= "grey text"> Cookies baked (this ascension): <img className="shrink-cookie" src={cookieImage}></img> <span className="white">{totalCookies < 1e6? Math.floor(totalCookies): NumberAbbreviator(totalCookies)}</span></div>
-        <div className= "grey text"> Cookies baked (all time): <img className="shrink-cookie" src={cookieImage}></img> <span className="white">[ascension not implemented]</span></div>
-        <div className= "grey text"> Cookies forfeited by ascending: <img className="shrink-cookie" src={cookieImage}></img> <span className="white">[ascension not implemented]</span></div>
-        <div className= "grey text"> Legacy started: </div>
-        <div className= "grey text"> Run started: </div>
-        <div className= "grey text"> Buildings owned: <span className="white">{totalBuildings()} </span></div>
-        <div className= "grey text"> Cookies per second: <span className="white">{totalCps()} </span></div>
-        <div className= "grey text"> Cookies per click: <span className="white">{perClick} </span></div>
-        <div className= "grey text"> Hand-made cookies: <span className="white">{cookiesClicked} </span></div>
-        <div className= "grey text"> Golden cookie clicks <span className="white">[Not Implemented] </span></div>
+        <div className="grey text"> Cookies in bank: <img className="shrink-cookie" src={cookieImage}></img> <span className="white">{totalCookies < 1e6 ? Math.floor(totalCookies) : NumberAbbreviator(totalCookies)}</span></div>
+        <div className="grey text"> Cookies baked (this ascension): <img className="shrink-cookie" src={cookieImage}></img> <span className="white">{totalCookies < 1e6 ? Math.floor(totalCookies) : NumberAbbreviator(totalCookies)}</span></div>
+        <div className="grey text"> Cookies baked (all time): <img className="shrink-cookie" src={cookieImage}></img> <span className="white">[ascension not implemented]</span></div>
+        <div className="grey text"> Cookies forfeited by ascending: <img className="shrink-cookie" src={cookieImage}></img> <span className="white">[ascension not implemented]</span></div>
+        <div className="grey text"> Legacy started: </div>
+        <div className="grey text"> Run started: </div>
+        <div className="grey text"> Buildings owned: <span className="white">{totalBuildings()} </span></div>
+        <div className="grey text"> Cookies per second: <span className="white">{totalCps()} </span></div>
+        <div className="grey text"> Cookies per click: <span className="white">{perClick} </span></div>
+        <div className="grey text"> Hand-made cookies: <span className="white">{cookiesClicked} </span></div>
+        <div className="grey text"> Golden cookie clicks <span className="white">[Not Implemented] </span></div>
       </div>
     )
   }
@@ -596,12 +655,12 @@ function App() {
         </div>
 
         <div>
-          <div className="cookie-count"> <h1> {totalCookies < 1e6? Math.floor(totalCookies): NumberAbbreviator(totalCookies)} cookies</h1> </div>
+          <div className="cookie-count"> <h1> {totalCookies < 1e6 ? Math.floor(totalCookies) : NumberAbbreviator(totalCookies)} cookies</h1> </div>
           <div className="cookie-rate">per second: {NumberAbbreviator(Math.round(totalCps() * 10) / 10)}</div>
         </div>
 
         <div className="main-cookie">
-        <img className="shine2" src={shine}></img>
+          <img className="shine2" src={shine}></img>
           <img className="shine" src={shine}></img>
           <img onClick={cookieClicked} src={cookieImage} alt="cookie" />
         </div>
@@ -620,8 +679,8 @@ function App() {
       <div className="mid-col">
         <div className="menu">
           <div className="left-menu">
-          <img src={menuTopImage} className = {menuHovered === 1 ? "bright" : ""}></img>
-          <img src={menuBottomImage} className = {menuHovered === 2 ? "bright" : ""}></img>
+            <img src={menuTopImage} className={menuHovered === 1 ? "bright" : ""}></img>
+            <img src={menuBottomImage} className={menuHovered === 2 ? "bright" : ""}></img>
             <button className={"options menu-button" + (menuHovered === 1 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(1)} onMouseLeave={() => changeMenuHovered(0)}> Options </button>
             <button className={"stats menu-button" + (menuHovered === 2 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(2)} onMouseLeave={() => changeMenuHovered(0)} onClick={() => handleMenuClicked("stats")}> Stats </button>
           </div>
@@ -633,8 +692,8 @@ function App() {
           </div>
 
           <div className="right-menu">
-            <img className= {"y-reflect" + (menuHovered === 3 || menuSelected === "info" ? " bright" : "")} src={menuTopImage}></img>
-            <img className= {"y-reflect" + (menuHovered === 4 ? " bright" : "")} src={menuBottomImage}></img>
+            <img className={"y-reflect" + (menuHovered === 3 || menuSelected === "info" ? " bright" : "")} src={menuTopImage}></img>
+            <img className={"y-reflect" + (menuHovered === 4 ? " bright" : "")} src={menuBottomImage}></img>
             <button className={"info menu-button" + (menuHovered === 3 || menuSelected === "info" ? " bright" : "")} onMouseEnter={() => changeMenuHovered(3)} onMouseLeave={() => changeMenuHovered(0)} onClick={() => handleMenuClicked("info")}> Info </button>
             <button className={"legacy menu-button" + (menuHovered === 4 ? " bright" : "")} onMouseEnter={() => changeMenuHovered(4)} onMouseLeave={() => changeMenuHovered(0)}> Legacy </button>
           </div>
@@ -644,28 +703,28 @@ function App() {
           <img src={horizontalPoleImage}></img>
         </div>
 
-       
-          {
-              menuSelected === "main"?
-              <div className="building-backgrounds">
-                {renderBackgrounds()}
-              </div>
-              :
+
+        {
+          menuSelected === "main" ?
+            <div className="building-backgrounds">
+              {renderBackgrounds()}
+            </div>
+            :
             <div className="sub-menu">
               {
-                menuSelected === "info"?
-                <Info></Info>
-                : 
-                menuSelected == "stats"?
-                <>
-                  {Stats()}
-                </>
-                : null
+                menuSelected === "info" ?
+                  <Info></Info>
+                  :
+                  menuSelected == "stats" ?
+                    <>
+                      {Stats()}
+                    </>
+                    : null
               }
             </div>
-          }
-          
-        
+        }
+
+
 
       </div>
 
@@ -708,7 +767,7 @@ function App() {
             amt={amts[BUILDINGS_INDEX[BUILDINGS.CURSOR]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="Autoclicks once every 10 seconds." img={buildingImagesList[5]}
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.CURSOR]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
-          /> 
+          />
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.GRANDMA} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.GRANDMA]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.GRANDMA))}
@@ -738,7 +797,7 @@ function App() {
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.FACTORY]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
-           <Building
+          <Building
             dispatch={buildingDispatch} name={BUILDINGS.BANK} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.BANK]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.BANK))}
             amt={amts[BUILDINGS_INDEX[BUILDINGS.BANK]]} operation={primarySelected} totalCookies={totalCookies} changeCookies={changeTotalCookies} bulkSelected={bulkSelected}
             calculateSellPrice={calculateSellPrice} quote="Generates cookies from interest." img={buildingImagesList[2]}
@@ -752,7 +811,7 @@ function App() {
             tooltipImg={tooltipImages[BUILDINGS_INDEX[BUILDINGS.TEMPLE]]} cps={totalCps()} cookies={totalCookies} shopOption={primarySelected}
           />
 
-          
+
 
           <Building
             dispatch={buildingDispatch} name={BUILDINGS.WIZARD} price={Math.ceil(primarySelected === SHOP_OPTIONS.BUY ? prices[BUILDINGS_INDEX[BUILDINGS.WIZARD]] * (1 - 1.15 ** bulkSelected) / (1 - 1.15) : calculateSellPrice(BUILDINGS.WIZARD))}

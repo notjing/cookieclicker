@@ -19,8 +19,6 @@ function Tooltip({ x, y, width, children })  {
   useEffect(() => {
     if (tooltipRef.current) {
       changeHeight(tooltipRef.current.getBoundingClientRect().height);
-      //console.log('Tooltip height:', height);
-      console.log('idk what to name this:', y + height);
     }
   }, [children, x, y, width]);
 
