@@ -61,26 +61,26 @@ const BUILDINGS_INDEX = {
 }
 
 const REVERSE_BUILDINGS_INDEX = {
-  0 : [BUILDINGS.CURSOR],
-  1 : [BUILDINGS.GRANDMA],
-  2 : [BUILDINGS.FARM],
-  3 : [BUILDINGS.MINE],
-  4 : [BUILDINGS.FACTORY],
-  5 : [BUILDINGS.BANK],
-  6 : [BUILDINGS.TEMPLE],
-  7 : [BUILDINGS.WIZARD],
-  8 : [BUILDINGS.SHIPMENT],
-  9 : [BUILDINGS.ALCHEMY],
-  10 : [BUILDINGS.PORTAL],
-  11 : [BUILDINGS.TIME],
-  12 : [BUILDINGS.ANTIMATTER],
-  13 : [BUILDINGS.PRISM],
-  14 : [BUILDINGS.CHANCE],
-  15 : [BUILDINGS.FRACTAL],
-  16 : [BUILDINGS.JAVASCRIPT],
-  17 : [BUILDINGS.IDLE],
-  18 : [BUILDINGS.CORTEX],
-  19 : [BUILDINGS.YOU]
+  0: [BUILDINGS.CURSOR],
+  1: [BUILDINGS.GRANDMA],
+  2: [BUILDINGS.FARM],
+  3: [BUILDINGS.MINE],
+  4: [BUILDINGS.FACTORY],
+  5: [BUILDINGS.BANK],
+  6: [BUILDINGS.TEMPLE],
+  7: [BUILDINGS.WIZARD],
+  8: [BUILDINGS.SHIPMENT],
+  9: [BUILDINGS.ALCHEMY],
+  10: [BUILDINGS.PORTAL],
+  11: [BUILDINGS.TIME],
+  12: [BUILDINGS.ANTIMATTER],
+  13: [BUILDINGS.PRISM],
+  14: [BUILDINGS.CHANCE],
+  15: [BUILDINGS.FRACTAL],
+  16: [BUILDINGS.JAVASCRIPT],
+  17: [BUILDINGS.IDLE],
+  18: [BUILDINGS.CORTEX],
+  19: [BUILDINGS.YOU]
 }
 
 export const BASE_PRICE = {
@@ -223,22 +223,22 @@ function buildingReducer(state, { building, operation, bulkSelected, totalCookie
 }
 
 
-function findImage(image, row, col) {
+function findImage(image, row, col, px) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.src = image;
     img.onload = () => {
       const above = row - 1, left = col - 1;
-      const startX = left * 48;
-      const startY = above * 48;
-      const squareSize = 48;
+      const startX = left * px;
+      const startY = above * px;
+      const squareSize = px;
 
       const croppedCanvas = document.createElement('canvas');
       const croppedCtx = croppedCanvas.getContext('2d');
       croppedCanvas.width = squareSize;
       croppedCanvas.height = squareSize;
       croppedCtx.drawImage(img, startX, startY, squareSize, squareSize, 0, 0, squareSize, squareSize);
-
+      //console.log(croppedCanvas.toDataURL())
       resolve(croppedCanvas.toDataURL());
     };
     img.onerror = reject; // Handle image load errors
@@ -261,49 +261,49 @@ const backgroundBuildingImagesList = backgroundBuildingImages.keys().map(image =
 
 export const upgrades = [
   {
-    id: 0, name: "Reinforced index finger", desc: "The mouse and cursors are twice as efficient.", quote: "prod prod", price: 100, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 1]] }, img: await findImage(icons, 1, 1), afford: false
+    id: 0, name: "Reinforced index finger", desc: "The mouse and cursors are twice as efficient.", quote: "prod prod", price: 100, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 1]] }, img: await findImage(icons, 1, 1, 48), afford: false
   },
   {
-    id: 1, name: "Carpal tunnel prevention cream", desc: "The mouse and cursors are twice as efficient.", quote: "it... it hurts to click...", price: 500, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 1]] }, img: await findImage(icons, 2, 1), afford: false
+    id: 1, name: "Carpal tunnel prevention cream", desc: "The mouse and cursors are twice as efficient.", quote: "it... it hurts to click...", price: 500, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 1]] }, img: await findImage(icons, 2, 1, 48), afford: false
   },
   {
-    id: 2, name: "Ambidextrous", desc: "The mouse and cursors are twice as efficient.", quote: "Look ma, both hands!", price: 10000, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 10]] }, img: await findImage(icons, 3, 1), afford: false
+    id: 2, name: "Ambidextrous", desc: "The mouse and cursors are twice as efficient.", quote: "Look ma, both hands!", price: 10000, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 10]] }, img: await findImage(icons, 3, 1, 48), afford: false
   },
   {
-    id: 3, name: "Thousand fingers", desc: "The mouse and cursors gain +0.1 cookies for each non-cursor object owned.", quote: "clickity", price: 1e5, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 25]] }, img: await findImage(icons, 14, 1), afford: false
+    id: 3, name: "Thousand fingers", desc: "The mouse and cursors gain +0.1 cookies for each non-cursor object owned.", quote: "clickity", price: 1e5, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 25]] }, img: await findImage(icons, 14, 1, 48), afford: false
   },
   {
-    id: 4, name: "Million fingers", desc: "Multiplies the gain from Thousand fingers by 5.", quote: "clickityclickity", price: 1e7, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 50]] }, img: await findImage(icons, 15, 1), afford: false
+    id: 4, name: "Million fingers", desc: "Multiplies the gain from Thousand fingers by 5.", quote: "clickityclickity", price: 1e7, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 50]] }, img: await findImage(icons, 15, 1, 48), afford: false
   },
   {
-    id: 5, name: "Billion fingers", desc: "Multiplies the gain from Thousand fingers by 10.", quote: "clickityclickityclickity", price: 1e8, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 100]] }, img: await findImage(icons, 16, 1), afford: false
+    id: 5, name: "Billion fingers", desc: "Multiplies the gain from Thousand fingers by 10.", quote: "clickityclickityclickity", price: 1e8, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 100]] }, img: await findImage(icons, 16, 1, 48), afford: false
   },
   {
-    id: 6, name: "Trillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "clickityclickityclickityclickity", price: 1e9, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 150]] }, img: await findImage(icons, 17, 1), afford: false
+    id: 6, name: "Trillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "clickityclickityclickityclickity", price: 1e9, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 150]] }, img: await findImage(icons, 17, 1, 48), afford: false
   },
   {
-    id: 7, name: "Quadrillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "clickityclickityclickityclickityclick", price: 1e10, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 200]] }, img: await findImage(icons, 18, 1), afford: false
+    id: 7, name: "Quadrillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "clickityclickityclickityclickityclick", price: 1e10, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 200]] }, img: await findImage(icons, 18, 1, 48), afford: false
   },
   {
-    id: 8, name: "Quintillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "man, just go click click click click click, it’s real easy, man.", price: 1e13, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 250]] }, img: await findImage(icons, 19, 1), afford: false
+    id: 8, name: "Quintillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "man, just go click click click click click, it’s real easy, man.", price: 1e13, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 250]] }, img: await findImage(icons, 19, 1, 48), afford: false
   },
   {
-    id: 9, name: "Sextillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "sometimes things just click", price: 1e16, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 300]] }, img: await findImage(icons, 20, 1), afford: false
+    id: 9, name: "Sextillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "sometimes things just click", price: 1e16, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 300]] }, img: await findImage(icons, 20, 1, 48), afford: false
   },
   {
-    id: 10, name: "Septillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "[cursory flavor text]", price: 1e19, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 350]] }, img: await findImage(icons, 29, 1), afford: false
+    id: 10, name: "Septillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "[cursory flavor text]", price: 1e19, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 350]] }, img: await findImage(icons, 29, 1, 48), afford: false
   },
   {
-    id: 11, name: "Octillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Turns out you can quite put your finger on it.", price: 1e22, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 400]] }, img: await findImage(icons, 31, 1), afford: false
+    id: 11, name: "Octillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Turns out you can quite put your finger on it.", price: 1e22, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 400]] }, img: await findImage(icons, 31, 1, 48), afford: false
   },
   {
-    id: 12, name: "Nonillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Only for the freakiest handshakes.", price: 1e25, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 450]] }, img: await findImage(icons, 32, 1), afford: false
+    id: 12, name: "Nonillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Only for the freakiest handshakes.", price: 1e25, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 450]] }, img: await findImage(icons, 32, 1, 48), afford: false
   },
   {
-    id: 13, name: "Decillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Only for the freakiest handshakes.", price: 1e28, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 500]] }, img: await findImage(icons, 35, 1), afford: false
+    id: 13, name: "Decillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Only for the freakiest handshakes.", price: 1e28, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 500]] }, img: await findImage(icons, 35, 1, 48), afford: false
   },
   {
-    id: 14, name: "Undecillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Only for the freakiest handshakes.", price: 1e31, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 550]] }, img: await findImage(icons, 37, 1), afford: false
+    id: 14, name: "Undecillion fingers", desc: "Multiplies the gain from Thousand fingers by 20.", quote: "Only for the freakiest handshakes.", price: 1e31, unlocked: 0, bought: 0, req: { "building": [[BUILDINGS.CURSOR, 550]] }, img: await findImage(icons, 37, 1, 48), afford: false
   },
 
 
@@ -311,7 +311,7 @@ export const upgrades = [
 
 const BACKGROUND_BUILDINGS = {
   [BUILDINGS.CURSOR]: [],
-  [BUILDINGS.GRANDMA]: [<BackgroundBuilding x = {0} y = {0} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.GRANDMA] - 1]}> </BackgroundBuilding>],
+  [BUILDINGS.GRANDMA]: [],
   [BUILDINGS.FARM]: [],
   [BUILDINGS.MINE]: [],
   [BUILDINGS.FACTORY]: [],
@@ -333,12 +333,11 @@ const BACKGROUND_BUILDINGS = {
 
 }
 
-
 function App() {
   const [username, changeUsername] = useState("Default Username");
   const [perClick, changePerClick] = useState(1);
   const [cookiesClicked, changeCookiesClicked] = useState(0);
-  const [totalCookies, changeTotalCookies] = useState(100);
+  const [totalCookies, changeTotalCookies] = useState(1e50);
   const [ascensionCookies, changeAscensionCookies] = useState(0);
   const [primarySelected, changePrimarySelected] = useState(SHOP_OPTIONS.BUY);
   const [bulkSelected, changeBulkSelected] = useState(SHOP_OPTIONS.ONE);
@@ -478,14 +477,92 @@ function App() {
   }, [totalCookies])
 
   useEffect(() => {
-    async function loadImage() {
-      changeTooltipImages([await findImage(icons, 1, 1), await findImage(icons, 1, 2), await findImage(icons, 1, 3), await findImage(icons, 1, 4), await findImage(icons, 1, 5),
-      await findImage(icons, 1, 16), await findImage(icons, 1, 17), await findImage(icons, 1, 18), await findImage(icons, 1, 6), await findImage(icons, 1, 7), await findImage(icons, 1, 8),
-      await findImage(icons, 1, 9), await findImage(icons, 1, 14), await findImage(icons, 1, 15), await findImage(icons, 1, 20), await findImage(icons, 1, 21), await findImage(icons, 1, 33),
-      await findImage(icons, 1, 34), await findImage(icons, 1, 35), await findImage(icons, 1, 36)])
+    console.log("hi")
+    for (let i = 0; i < 200; i++) {
+      if (i % 3 == 0) BACKGROUND_BUILDINGS[BUILDINGS.GRANDMA].push(<BackgroundBuilding x={-900 - i * 51} y={20 + Math.random() * 6 - 3} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.GRANDMA] - 1]}> </BackgroundBuilding>)
+      else if (i % 3 == 1) BACKGROUND_BUILDINGS[BUILDINGS.GRANDMA].push(<BackgroundBuilding x={-900 - i * 51} y={35 + Math.random() * 6 - 3} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.GRANDMA] - 1]}> </BackgroundBuilding>)
+      else BACKGROUND_BUILDINGS[BUILDINGS.GRANDMA].push(<BackgroundBuilding x={-900 - i * 51} y={50 + Math.random() * 6 - 3} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.GRANDMA] - 1]}> </BackgroundBuilding>)
     }
-    loadImage();
-  }, []);
+
+    for (let i = 0; i < 200; i++) {
+      if (i % 2 == 0) BACKGROUND_BUILDINGS[BUILDINGS.FARM].push(<BackgroundBuilding x={-900 - i * 33} y={30 + Math.random() * 6 - 3} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.FARM] - 1]}> </BackgroundBuilding>)
+      if (i % 2 == 1) BACKGROUND_BUILDINGS[BUILDINGS.FARM].push(<BackgroundBuilding x={-900 - i * 33} y={50 + Math.random() * 6 - 3} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.FARM] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      if (i % 2 == 0) BACKGROUND_BUILDINGS[BUILDINGS.MINE].push(<BackgroundBuilding x={-900 - i * 33 + Math.random() * 14 - 7} y={40 + Math.random() * 10 - 5} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.MINE] - 1]}> </BackgroundBuilding>)
+      if (i % 2 == 1) BACKGROUND_BUILDINGS[BUILDINGS.MINE].push(<BackgroundBuilding x={-900 - i * 33 + Math.random() * 14 - 7} y={60 + Math.random() * 10 - 5} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.MINE] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) BACKGROUND_BUILDINGS[BUILDINGS.FACTORY].push(<BackgroundBuilding x={-900} y={20} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.FACTORY] - 1]}> </BackgroundBuilding>)
+
+    for (let i = 0; i < 200; i++) BACKGROUND_BUILDINGS[BUILDINGS.BANK].push(<BackgroundBuilding x={-900 - i * 5 + Math.random() * 4 - 2} y={40 + Math.random() * 6 - 3} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.BANK] - 1]}> </BackgroundBuilding>)
+
+    for (let i = 0; i < 200; i++) {
+      if (i % 2 == 0) BACKGROUND_BUILDINGS[BUILDINGS.TEMPLE].push(<BackgroundBuilding x={-900 - i * 25 + Math.random() * 6 - 3} y={15 + Math.random() * 6 - 3} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.TEMPLE] - 1]}> </BackgroundBuilding>)
+      if (i % 2 == 1) BACKGROUND_BUILDINGS[BUILDINGS.TEMPLE].push(<BackgroundBuilding x={-900 - i * 25 + Math.random() * 6 - 3} y={30 + Math.random() * 6 - 3} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.TEMPLE] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      if (i % 2 == 0) BACKGROUND_BUILDINGS[BUILDINGS.WIZARD].push(<BackgroundBuilding x={-900 - i * 30 + Math.random() * 10 - 5} y={30 + Math.random() * 16 - 8} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.WIZARD] - 1]}> </BackgroundBuilding>)
+      if (i % 2 == 1) BACKGROUND_BUILDINGS[BUILDINGS.WIZARD].push(<BackgroundBuilding x={-900 - i * 30 + Math.random() * 10 - 5} y={40 + Math.random() * 16 - 8} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.WIZARD] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      BACKGROUND_BUILDINGS[BUILDINGS.SHIPMENT].push(<BackgroundBuilding x={-900} y={30 + Math.random() * 16 - 8} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.SHIPMENT] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      if (i % 2 == 0) BACKGROUND_BUILDINGS[BUILDINGS.ALCHEMY].push(<BackgroundBuilding x={-900 - i * 30 + Math.random() * 10 - 5} y={30 + Math.random() * 10 - 5} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.ALCHEMY] - 1]}> </BackgroundBuilding>)
+      if (i % 2 == 1) BACKGROUND_BUILDINGS[BUILDINGS.ALCHEMY].push(<BackgroundBuilding x={-900 - i * 30 + Math.random() * 10 - 5} y={40 + Math.random() * 10 - 5} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.ALCHEMY] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      BACKGROUND_BUILDINGS[BUILDINGS.PORTAL].push(<BackgroundBuilding x={-900 - i * 20 + Math.random() * 20 - 10} y={30 + Math.random() * 30 - 15} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.PORTAL] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      BACKGROUND_BUILDINGS[BUILDINGS.TIME].push(<BackgroundBuilding x={-900 + Math.random() * 20 - 10} y={30 + Math.random() * 20 - 10} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.TIME] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      BACKGROUND_BUILDINGS[BUILDINGS.ANTIMATTER].push(<BackgroundBuilding x={-900} y={30 + Math.random() * 40 - 20} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.ANTIMATTER] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      BACKGROUND_BUILDINGS[BUILDINGS.PRISM].push(<BackgroundBuilding x={-900 + Math.random() * 20 - 10} y={40} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.PRISM] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      BACKGROUND_BUILDINGS[BUILDINGS.CHANCE].push(<BackgroundBuilding x={-900 - i * 30} y={30 + Math.random() * 50 - 25} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.CHANCE] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      BACKGROUND_BUILDINGS[BUILDINGS.FRACTAL].push(<BackgroundBuilding x={-900 - i*50} y={30 + Math.random() * 50 - 25} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.FRACTAL] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      BACKGROUND_BUILDINGS[BUILDINGS.JAVASCRIPT].push(<BackgroundBuilding x={-900 + Math.random() * 10 - 5} y={Math.random() * 30 - 5} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.JAVASCRIPT] - 1]}> </BackgroundBuilding>)
+    }
+
+    for (let i = 0; i < 200; i++) {
+      if(i % 2 == 0) BACKGROUND_BUILDINGS[BUILDINGS.YOU].push(<BackgroundBuilding x={-900 - i*32} y={20} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.YOU] - 1]}> </BackgroundBuilding>)
+      if(i % 2 == 1) BACKGROUND_BUILDINGS[BUILDINGS.YOU].push(<BackgroundBuilding x={-900 - i*32} y={40} img={backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.YOU] - 1]}> </BackgroundBuilding>)
+    }
+
+    const renderRandom = async() => {
+      for (let i = 0; i < 200; i++) {
+        BACKGROUND_BUILDINGS[BUILDINGS.IDLE].push(<BackgroundBuilding x={-900 - i*40} y={30 + Math.random() * 70 - 35} img={await findImage(backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.IDLE] - 1], 1, Math.floor((Math.random() * 4 + 1)), 64)}> </BackgroundBuilding>)
+      }
+
+      for (let i = 0; i < 200; i++) {
+        BACKGROUND_BUILDINGS[BUILDINGS.CORTEX].push(<BackgroundBuilding x={-900 - i * 10} y={30 + Math.random() * 70 - 35} img={await findImage(backgroundBuildingImagesList[BUILDINGS_INDEX[BUILDINGS.CORTEX] - 1], 1, Math.floor((Math.random() * 4 + 1)), 64)}> </BackgroundBuilding>)
+      }
+    }
+   
+    renderRandom();
+
+  }, [])
 
   function totalCps() {
     let ret = 0
@@ -571,9 +648,9 @@ function App() {
 
   function renderBackgroundBuildings(building) {
     let ret = []
-    if(building === 0) return ret;
+    if (building === 0) return ret;
     for (let j = 0; j < Math.min(BACKGROUND_BUILDINGS[REVERSE_BUILDINGS_INDEX[building]].length, amts[building]); j++) {
-      ret.push(BACKGROUND_BUILDINGS[REVERSE_BUILDINGS_INDEX[building]][j]) 
+      ret.push(BACKGROUND_BUILDINGS[REVERSE_BUILDINGS_INDEX[building]][j])
     }
     return ret;
   }
@@ -591,9 +668,10 @@ function App() {
               <img src={buildingBackgroundImagesList[i - 1]} />
               <img src={buildingBackgroundImagesList[i - 1]} />
               <img src={buildingBackgroundImagesList[i - 1]} />
+              <img src={buildingBackgroundImagesList[i - 1]} />
               {renderBackgroundBuildings(i)}
             </div>
-            
+
 
             <div className="divider-three">
               <img src={horizontalPoleImage}></img>

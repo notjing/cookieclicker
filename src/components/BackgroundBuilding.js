@@ -5,9 +5,16 @@ function BackgroundBuilding(props) {
 
     const {img, x, y} = props;
 
+    const imgStyle = {
+        transform: `translate(${x}px, ${y}px)`
+    };
+
     return (
         <div className="background-building">
-            <img src={img}></img>
+            {
+                console.log(x)
+            }
+            <img src={img} style={imgStyle}/>
         </div>
     )
 }
