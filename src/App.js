@@ -337,7 +337,7 @@ function App() {
   const [username, changeUsername] = useState("Default Username");
   const [perClick, changePerClick] = useState(1);
   const [cookiesClicked, changeCookiesClicked] = useState(0);
-  const [totalCookies, changeTotalCookies] = useState(1e50);
+  const [totalCookies, changeTotalCookies] = useState(0);
   const [ascensionCookies, changeAscensionCookies] = useState(0);
   const [primarySelected, changePrimarySelected] = useState(SHOP_OPTIONS.BUY);
   const [bulkSelected, changeBulkSelected] = useState(SHOP_OPTIONS.ONE);
