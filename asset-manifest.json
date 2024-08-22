@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/cookieclicker/static/css/main.0c86f599.css",
-    "main.js": "/cookieclicker/static/js/main.2926489c.js",
+    "main.js": "/cookieclicker/static/js/main.b4c8f9d3.js",
     "static/js/453.5053ec79.chunk.js": "/cookieclicker/static/js/453.5053ec79.chunk.js",
     "static/media/cookie.png": "/cookieclicker/static/media/cookie.e9be7881828a8b2469cf.png",
     "static/media/button_background.png": "/cookieclicker/static/media/button_background.711f3c03690504ca2f2a.png",
@@ -12,11 +12,11 @@
     "static/media/woodenseperatorhorizontal.png": "/cookieclicker/static/media/woodenseperatorhorizontal.31d08978e31ab6a30003.png",
     "index.html": "/cookieclicker/index.html",
     "main.0c86f599.css.map": "/cookieclicker/static/css/main.0c86f599.css.map",
-    "main.2926489c.js.map": "/cookieclicker/static/js/main.2926489c.js.map",
+    "main.b4c8f9d3.js.map": "/cookieclicker/static/js/main.b4c8f9d3.js.map",
     "453.5053ec79.chunk.js.map": "/cookieclicker/static/js/453.5053ec79.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0c86f599.css",
-    "static/js/main.2926489c.js"
+    "static/js/main.b4c8f9d3.js"
   ]
 }
