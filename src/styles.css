@@ -113,7 +113,8 @@ img {
 
 .layout {
     display: grid;
-    grid-template-columns: 2.29fr 0.75rem 4fr 0.75rem  1.5fr;flex: 1 1 auto;
+    grid-template-columns: 29.4% 1% 49% 1% 19.6%;
+    flex: 1 1 auto;
     height: 100vh;
     width: 100%;
     overflow: hidden;
@@ -203,15 +204,31 @@ img {
     filter: saturate(1.5);
     filter: brightness(1.1);
 
-}    .layout .cookie-rate {
+}    
+
+.layout .cookie-rate {
     margin-bottom: 1.5rem;
     display: flex;
     background-color: rgba(0, 0, 0, 0.4);
     justify-content: center;
 }
 
+
 .layout .divider-one {
     grid-column: 2 / 2;
+    width: 100%;
+}
+
+.layout .divider-two {
+    grid-column: 4 / 4;
+}
+
+.layout .divider-one img, .layout .divider-two img {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
 }
 
 .layout .mid-col {
@@ -354,17 +371,6 @@ img {
 }
 
 .background-building img{
-    position: relative;
-}
-
-.layout .divider-two {
-    grid-column: 4 / 4;
-}
-
-.layout .divider-one img,
-.layout .divider-two img {
-    width: 0.75rem;
-    height: 100vh;
     position: relative;
 }
 
